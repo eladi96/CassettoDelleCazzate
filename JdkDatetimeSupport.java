@@ -19,10 +19,11 @@ import java.util.Date;
 public class JdkDatetimeSupport {
 
     private static String pattern = "";
-    private static ThreadLocal<SimpleDateFormat> sdf = new ThreadLocal<SimpleDateFormat>() {
+    private final static ThreadLocal<SimpleDateFormat> sdf = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat(pattern);
+        	final String ptrn = pattern;
+            return new SimpleDateFormat(ptrn);
         }
     };
 
