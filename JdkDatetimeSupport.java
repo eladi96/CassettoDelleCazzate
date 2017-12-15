@@ -13,6 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.math3.stat.descriptive.SynchronizedDescriptiveStatistics;
+
 /**
  * there is no official way to encode/decode datetime, this is just an option for you
  */
@@ -21,8 +23,9 @@ public class JdkDatetimeSupport {
     private static String pattern = "";
     private final static ThreadLocal<SimpleDateFormat> sdf = new ThreadLocal<SimpleDateFormat>() {
         @Override
-        protected synchronized SimpleDateFormat initialValue() {
-            return new SimpleDateFormat(pattern);
+        protected SimpleDateFormat initialValue() {
+        	final SimpleDateFormat result = new SimpleDateFormat(pattern); 
+            return result;
         }
     };
 
