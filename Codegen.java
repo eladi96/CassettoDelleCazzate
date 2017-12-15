@@ -192,11 +192,11 @@ class Codegen {
                 staticGen(cacheKey, writer, source);
             } finally {
                 writer.close();
-                fileOutputStream.close();
             }
         } finally {
             fileOutputStream.close();
         }
+        fileOutputStream.close();
     }
 
     private static void staticGen(String cacheKey, OutputStreamWriter writer, String source) throws IOException {
