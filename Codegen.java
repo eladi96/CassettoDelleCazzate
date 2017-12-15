@@ -192,6 +192,7 @@ class Codegen {
                 staticGen(cacheKey, writer, source);
             } finally {
                 writer.close();
+                fileOutputStream.close();
             }
         } finally {
             fileOutputStream.close();
