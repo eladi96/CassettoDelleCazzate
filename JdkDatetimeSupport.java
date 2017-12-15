@@ -21,9 +21,8 @@ public class JdkDatetimeSupport {
     private static String pattern = "";
     private final static ThreadLocal<SimpleDateFormat> sdf = new ThreadLocal<SimpleDateFormat>() {
         @Override
-        protected SimpleDateFormat initialValue() {
-        	final String ptrn = pattern;
-            return new SimpleDateFormat(ptrn);
+        protected synchronized SimpleDateFormat initialValue() {
+            return new SimpleDateFormat(pattern);
         }
     };
 
