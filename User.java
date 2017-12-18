@@ -19,7 +19,9 @@ public class User implements com.jsoniter.spi.Decoder {
 		nextToken = com.jsoniter.CodegenAccess.readByte(iter);
 		if (nextToken != '"') {
 			if (nextToken == '}') {
-				return (existingObj == null ? new com.jsoniter.demo.User() : (com.jsoniter.demo.User) existingObj);
+				if(existingObj instanceof com.jsoniter.demo.User)
+					existingObj = (com.jsoniter.demo.User) existingObj;
+				return (existingObj == null ? new com.jsoniter.demo.User() : existingObj);
 			} else {
 				nextToken = com.jsoniter.CodegenAccess.nextToken(iter);
 				if (nextToken == '}') {
