@@ -19,13 +19,19 @@ public class User implements com.jsoniter.spi.Decoder {
 		nextToken = com.jsoniter.CodegenAccess.readByte(iter);
 		if (nextToken != '"') {
 			if (nextToken == '}') {
+				
 				if(existingObj instanceof com.jsoniter.demo.User)
 					existingObj = (com.jsoniter.demo.User) existingObj;
+				
 				return (existingObj == null ? new com.jsoniter.demo.User() : existingObj);
 			} else {
 				nextToken = com.jsoniter.CodegenAccess.nextToken(iter);
 				if (nextToken == '}') {
-					return (existingObj == null ? new com.jsoniter.demo.User() : (com.jsoniter.demo.User) existingObj);
+					
+					if(existingObj instanceof com.jsoniter.demo.User)
+						existingObj = (com.jsoniter.demo.User) existingObj;
+					
+					return (existingObj == null ? new com.jsoniter.demo.User() : existingObj);
 				} else {
 					com.jsoniter.CodegenAccess.unreadByte(iter);
 				}
@@ -39,21 +45,24 @@ public class User implements com.jsoniter.spi.Decoder {
 		do {
 			switch (com.jsoniter.CodegenAccess.readObjectFieldAsHash(iter)) {
 			case -1078100014:
-				_lastName_ = (java.lang.String) iter.readString();
+				_lastName_ =  iter.readString();
 				continue;
 			case -799547430:
-				_firstName_ = (java.lang.String) iter.readString();
+				_firstName_ = iter.readString();
 				continue;
 			case -768634731:
-				_score_ = (int) com.jsoniter.CodegenAccess.readInt("score@decoder.com.jsoniter.demo.User", iter);
+				_score_ = com.jsoniter.CodegenAccess.readInt("score@decoder.com.jsoniter.demo.User", iter);
 				continue;
 			default:
 				break;
 			}
 			iter.skip();
 		} while (com.jsoniter.CodegenAccess.nextTokenIsComma(iter));
+		
+		if(existingObj instanceof com.jsoniter.demo.User)
+			existingObj = (com.jsoniter.demo.User) existingObj;
 		com.jsoniter.demo.User obj = (existingObj == null ? new com.jsoniter.demo.User()
-				: (com.jsoniter.demo.User) existingObj);
+				: existingObj);
 		obj.firstName = _firstName_;
 		obj.lastName = _lastName_;
 		obj.score = _score_;
