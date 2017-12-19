@@ -47,7 +47,7 @@ public class User implements com.jsoniter.spi.Decoder {
 		return obj;
 	}*/
 	
-	/*Object a3 = decoder.com.jsoniter.demo.User.decode_(iter);
+	Object a3 = decoder.com.jsoniter.demo.User.decode_(iter);
 	if(a3 instanceof com.jsoniter.demo.User)
 		a3 = (com.jsoniter.demo.User) a3;
 	
@@ -63,7 +63,7 @@ public class User implements com.jsoniter.spi.Decoder {
 		obj.add(a2);
 		obj.add(a3);
 		return obj;
-	}*/
+	}
 	
 	Object a4 = decoder.com.jsoniter.demo.User.decode_(iter);
 	if(a4 instanceof com.jsoniter.demo.User)
