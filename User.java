@@ -2,7 +2,7 @@ package decoder.java.util.List_com.jsoniter.demo;
 public class User implements com.jsoniter.spi.Decoder {
 	public static java.lang.Object decode_(com.jsoniter.JsonIterator iter) throws java.io.IOException {
 		
-		if(com.jsoniter.CodegenAccess.resetExistingObject(iter) !instanceof java.util.ArrayList)
+		if(com.jsoniter.CodegenAccess.resetExistingObject(iter) instanceof java.util.ArrayList)
 			java.util.ArrayList col = (java.util.ArrayList)com.jsoniter.CodegenAccess.resetExistingObject(iter);
 	if (iter.readNull()) { com.jsoniter.CodegenAccess.resetExistingObject(iter); return null; }
 	if (!com.jsoniter.CodegenAccess.readArrayStart(iter)) {
