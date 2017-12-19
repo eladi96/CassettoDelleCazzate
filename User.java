@@ -65,8 +65,9 @@ public class User implements com.jsoniter.spi.Decoder {
 		return obj;
 	}
 	
-	if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
-		Object a4 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);
+	Object a4 = decoder.com.jsoniter.demo.User.decode_(iter);
+	if(a4 instanceof com.jsoniter.demo.User)
+		a4 = (com.jsoniter.demo.User) a4;
 	
 	java.util.ArrayList obj = new java.util.ArrayList(8);
 	if(col != null) {
