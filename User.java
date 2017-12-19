@@ -68,20 +68,20 @@ public class User implements com.jsoniter.spi.Decoder {
 	/*if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
 		Object a4 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);*/
 	
-	/*java.util.ArrayList obj;
+	java.util.ArrayList obj;
 	if(col == null)
 		obj = new java.util.ArrayList(8);
 	else
 		if(com.jsoniter.CodegenAccess.reuseCollection(col) instanceof java.util.ArrayList)
 			obj = (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);
-		else throw new IOException();*/
+		else throw new IOException();
 	
 	obj.add(a1);
 	obj.add(a2);
 	obj.add(a3);
 	obj.add(a4);
 	while (com.jsoniter.CodegenAccess.nextToken(iter) == ',') {
-		com.jsoniter.demo.User parametro;
+		com.jsoniter.demo.User parametro = decoder.com.jsoniter.demo.User.decode_(iter);
 		if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
 			parametro = (com.jsoniter.demo.User) decoder.com.jsoniter.demo.User.decode_(iter);
 		obj.add(parametro);
