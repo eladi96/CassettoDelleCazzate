@@ -81,10 +81,10 @@ public class User implements com.jsoniter.spi.Decoder {
 	obj.add(a3);
 	obj.add(a4);
 	while (com.jsoniter.CodegenAccess.nextToken(iter) == ',') {
-		/*com.jsoniter.demo.User parametro;
+		com.jsoniter.demo.User parametro;
 		if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
 			parametro = (com.jsoniter.demo.User) decoder.com.jsoniter.demo.User.decode_(iter);
-		obj.add(parametro);*/
+		obj.add(parametro);
 	}
 	return obj;
 	}
