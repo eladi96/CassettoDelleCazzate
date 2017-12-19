@@ -14,7 +14,7 @@ public class User implements com.jsoniter.spi.Decoder {
 				return (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);*/
 	}
 	
-	Object a1 = decoder.com.jsoniter.demo.User.decode_(iter);
+	/*Object a1 = decoder.com.jsoniter.demo.User.decode_(iter);
 	if(a1 instanceof com.jsoniter.demo.User)
 		a1 = (com.jsoniter.demo.User) a1;
 	
@@ -28,9 +28,9 @@ public class User implements com.jsoniter.spi.Decoder {
 
 		obj.add(a1);
 		return obj;
-	}
+	}*/
 	
-	Object a2 = decoder.com.jsoniter.demo.User.decode_(iter);
+	/*Object a2 = decoder.com.jsoniter.demo.User.decode_(iter);
 	if(a2 instanceof com.jsoniter.demo.User)
 		a2 = (com.jsoniter.demo.User) a2;
 	
@@ -45,9 +45,9 @@ public class User implements com.jsoniter.spi.Decoder {
 		obj.add(a1);
 		obj.add(a2);
 		return obj;
-	}
+	}*/
 	
-	Object a3 = decoder.com.jsoniter.demo.User.decode_(iter);
+	/*Object a3 = decoder.com.jsoniter.demo.User.decode_(iter);
 	if(a3 instanceof com.jsoniter.demo.User)
 		a3 = (com.jsoniter.demo.User) a3;
 	
@@ -63,7 +63,7 @@ public class User implements com.jsoniter.spi.Decoder {
 		obj.add(a2);
 		obj.add(a3);
 		return obj;
-	}
+	}*/
 	
 	Object a4 = decoder.com.jsoniter.demo.User.decode_(iter);
 	if(a4 instanceof com.jsoniter.demo.User)
