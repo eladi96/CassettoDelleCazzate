@@ -14,50 +14,50 @@ public class User implements com.jsoniter.spi.Decoder {
 				return (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);*/
 	}
 	
-	/*if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
-		Object a1 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);*/
+	Object a1 = decoder.com.jsoniter.demo.User.decode_(iter);
+	if(a1 instanceof com.jsoniter.demo.User)
+		a1 = (com.jsoniter.demo.User) a1;
+	
 	if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {
 		
-		/*java.util.ArrayList obj;
-		if(col == null)
-			obj = new java.util.ArrayList(1);
-		else
+		java.util.ArrayList obj = new java.util.ArrayList(1);
+		if(col != null) {
 			if(com.jsoniter.CodegenAccess.reuseCollection(col) instanceof java.util.ArrayList)
 				obj = (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);
-			else throw new IOException();*/
+			else throw new IOException();
 
 		obj.add(a1);
 		return obj;
 	}
 	
-	/*if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
-		Object a2 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);*/
+	Object a2 = decoder.com.jsoniter.demo.User.decode_(iter);
+	if(a2 instanceof com.jsoniter.demo.User)
+		a2 = (com.jsoniter.demo.User) a2;
+	
 	if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {
 		
-		/*java.util.ArrayList obj;
-		if(col == null)
-			obj = new java.util.ArrayList(2);
-		else
+		java.util.ArrayList obj = new java.util.ArrayList(2);
+		if(col != null) {
 			if(com.jsoniter.CodegenAccess.reuseCollection(col) instanceof java.util.ArrayList)
 				obj = (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);
-			else throw new IOException();*/
+			else throw new IOException();
 		
 		obj.add(a1);
 		obj.add(a2);
 		return obj;
 	}
 	
-	/*if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
-		Object a3 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);*/
+	Object a3 = decoder.com.jsoniter.demo.User.decode_(iter);
+	if(a3 instanceof com.jsoniter.demo.User)
+		a3 = (com.jsoniter.demo.User) a3;
+	
 	if (com.jsoniter.CodegenAccess.nextToken(iter) != ',') {
 		
-		/*java.util.ArrayList obj;
-		if(col == null)
-			obj = new java.util.ArrayList(3);
-		else
+		java.util.ArrayList obj = new java.util.ArrayList(3);
+		if(col != null) {
 			if(com.jsoniter.CodegenAccess.reuseCollection(col) instanceof java.util.ArrayList)
 				obj = (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);
-			else throw new IOException();*/
+			else throw new IOException();
 
 		obj.add(a1);
 		obj.add(a2);
@@ -75,9 +75,7 @@ public class User implements com.jsoniter.spi.Decoder {
 			obj = (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);
 		else throw new IOException();
 	}
-		
-		
-	
+
 	obj.add(a1);
 	obj.add(a2);
 	obj.add(a3);
