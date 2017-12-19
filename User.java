@@ -65,16 +65,17 @@ public class User implements com.jsoniter.spi.Decoder {
 		return obj;
 	}
 	
-	/*if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
-		Object a4 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);*/
+	if(decoder.com.jsoniter.demo.User.decode_(iter) instanceof com.jsoniter.demo.User)
+		Object a4 = (com.jsoniter.demo.User)decoder.com.jsoniter.demo.User.decode_(iter);
 	
-	java.util.ArrayList obj;
-	if(col == null)
-		obj = new java.util.ArrayList(8);
-	else
+	java.util.ArrayList obj = new java.util.ArrayList(8);
+	if(col != null) {
 		if(com.jsoniter.CodegenAccess.reuseCollection(col) instanceof java.util.ArrayList)
 			obj = (java.util.ArrayList)com.jsoniter.CodegenAccess.reuseCollection(col);
 		else throw new IOException();
+	}
+		
+		
 	
 	obj.add(a1);
 	obj.add(a2);
