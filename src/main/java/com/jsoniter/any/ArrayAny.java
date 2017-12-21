@@ -78,7 +78,10 @@ class ArrayAny extends Any {
             return Any.rewrap(result);
         }
         try {
-            return val.get((Integer) key).get(keys, idx + 1);
+        	if(key instanceof Integer) {
+        		 return val.get((Integer) key).get(keys, idx + 1);
+        	}
+            
         } catch (IndexOutOfBoundsException e) {
             return new NotFoundAny(keys, idx, object());
         } catch (ClassCastException e) {

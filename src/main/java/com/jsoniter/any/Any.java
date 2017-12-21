@@ -17,13 +17,19 @@ public abstract class Any implements Iterable<Any> {
         Encoder.ReflectionEncoder anyEncoder = new Encoder.ReflectionEncoder() {
             @Override
             public void encode(Object obj, JsonStream stream) throws IOException {
-                Any any = (Any) obj;
-                any.writeTo(stream);
+            	if(obj instanceof Any) {
+            		Any any = (Any) obj;
+                    any.writeTo(stream);
+            	}
+            	
             }
 
             @Override
             public Any wrap(Object obj) {
-                return (Any) obj;
+            	if(obj instanceof Any ) {
+            		return (Any) obj;
+            	}
+            	
             }
         };
         JsonStream.registerNativeEncoder(Any.class, anyEncoder);
@@ -100,7 +106,10 @@ public abstract class Any implements Iterable<Any> {
     }
 
     public <T> T bindTo(T obj) {
-        return (T) object();
+    	if(T instanceof object()) {
+    		return (T) object();
+    	}
+       
     }
 
     public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj, Object... keys) {
@@ -108,7 +117,10 @@ public abstract class Any implements Iterable<Any> {
     }
 
     public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj) {
-        return (T) object();
+       if(T instanceof object()) {
+    	   return (T) object();
+       }
+    	
     }
 
     public Object object(Object... keys) {
@@ -118,11 +130,17 @@ public abstract class Any implements Iterable<Any> {
     public abstract Object object();
 
     public Map<String, Any> asMap() {
-        return (Map<String, Any>) object();
+    	if(Map<String, Any> instanceof object()) {
+    		return (Map<String, Any>) object();
+    	}
+        
     }
 
     public List<Any> asList() {
-        return (List<Any>) object();
+    	if(List<Any> instanceof object()) {
+    		 return (List<Any>) object();
+    	}
+        
     }
 
     public <T> T as(Class<T> clazz, Object... keys) {
@@ -130,7 +148,10 @@ public abstract class Any implements Iterable<Any> {
     }
 
     public <T> T as(Class<T> clazz) {
-        return (T) object();
+        if(T instanceof object()) {
+        	return (T) object();
+        }
+    	
     }
 
     public <T> T as(TypeLiteral<T> typeLiteral, Object... keys) {
@@ -138,7 +159,10 @@ public abstract class Any implements Iterable<Any> {
     }
 
     public <T> T as(TypeLiteral<T> typeLiteral) {
-        return (T) object();
+    	if(T instanceof object()) {
+    		return (T) object();
+    	}
+        
     }
 
     public final boolean toBoolean(Object... keys) {
@@ -346,8 +370,11 @@ public abstract class Any implements Iterable<Any> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if(o instanceof Any) {
+        	  Any any = (Any) o;
+        }
 
-        Any any = (Any) o;
+        
 
         Object obj = this.object();
         Object thatObj = any.object();

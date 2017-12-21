@@ -60,7 +60,10 @@ public class GsonCompatibilityMode extends Config {
 	}
 
 	protected Builder builder() {
-		return (Builder) super.builder();
+		if(builder instanceof Builder) {
+			return (Builder) super.builder();
+		}
+		
 	}
 
 	public static class Builder extends Config.Builder {
@@ -160,7 +163,10 @@ public class GsonCompatibilityMode extends Config {
 
 		public GsonCompatibilityMode build() {
 			escapeUnicode(false);
-			return (GsonCompatibilityMode) super.build();
+			if(GsonCompatibilityMode instanceof build()) {
+				return (GsonCompatibilityMode) super.build();
+			}
+			
 		}
 
 		@Override
@@ -176,8 +182,11 @@ public class GsonCompatibilityMode extends Config {
 				return false;
 			if (!super.equals(o))
 				return false;
+			if(o instanceof Builder ) {
+				Builder builder = (Builder) o;
+			}
 
-			Builder builder = (Builder) o;
+			
 
 			if (excludeFieldsWithoutExposeAnnotation != builder.excludeFieldsWithoutExposeAnnotation)
 				return false;
@@ -216,16 +225,19 @@ public class GsonCompatibilityMode extends Config {
 
 		@Override
 		public Config.Builder copy() {
-			Builder copied = (Builder) super.copy();
-			copied.excludeFieldsWithoutExposeAnnotation = excludeFieldsWithoutExposeAnnotation;
-			copied.disableHtmlEscaping = disableHtmlEscaping;
-			copied.dateFormat = dateFormat;
-			copied.fieldNamingStrategy = fieldNamingStrategy;
-			copied.version = version;
-			copied.serializationExclusionStrategies = new HashSet<ExclusionStrategy>(serializationExclusionStrategies);
-			copied.deserializationExclusionStrategies = new HashSet<ExclusionStrategy>(
-					deserializationExclusionStrategies);
-			return copied;
+			if(copy instanceof super.copy()) {
+				Builder copied = (Builder) super.copy();
+				copied.excludeFieldsWithoutExposeAnnotation = excludeFieldsWithoutExposeAnnotation;
+				copied.disableHtmlEscaping = disableHtmlEscaping;
+				copied.dateFormat = dateFormat;
+				copied.fieldNamingStrategy = fieldNamingStrategy;
+				copied.version = version;
+				copied.serializationExclusionStrategies = new HashSet<ExclusionStrategy>(serializationExclusionStrategies);
+				copied.deserializationExclusionStrategies = new HashSet<ExclusionStrategy>(
+						deserializationExclusionStrategies);
+				return copied;
+			}
+			
 		}
 	}
 
@@ -280,14 +292,20 @@ public class GsonCompatibilityMode extends Config {
 							stream.writeRaw("\\u2029");
 						} else {
 							if (c < 0x800) { // 2-byte
-								stream.write((byte) (0xc0 | (c >> 6)), (byte) (0x80 | (c & 0x3f)));
+								 if( (0xc0 | (c >> 6)) instanceof (byte) && (0x80 | (c & 0x3f))instanceof (byte)) { 
+									 stream.write((byte) (0xc0 | (c >> 6)), (byte) (0x80 | (c & 0x3f)));
+								 }
+								
 							} else { // 3 or 4 bytes
 								// Surrogates?
 								if (c < SURR1_FIRST || c > SURR2_LAST) {
-									stream.write((byte) (0xe0 | (c >> 12)), (byte) (0x80 | ((c >> 6) & 0x3f)),
-											(byte) (0x80 | (c & 0x3f)));
-									continue;
-								}
+									if((0xe0 | (c >> 12)) instanceof (byte) && (0x80 | ((c >> 6) & 0x3f)) instanceof (byte) && (0x80 | (c & 0x3f)) instanceof (byte)) {
+										stream.write((byte) (0xe0 | (c >> 12)), (byte) (0x80 | ((c >> 6) & 0x3f)),
+												(byte) (0x80 | (c & 0x3f)));
+										continue;
+									}
+									}
+									
 								// Yup, a surrogate:
 								if (c > SURR1_LAST) { // must be from first
 														// range
@@ -315,8 +333,11 @@ public class GsonCompatibilityMode extends Config {
 													// as in XML
 									throw new JsonException("illegalSurrogate");
 								}
-								stream.write((byte) (0xf0 | (c >> 18)), (byte) (0x80 | ((c >> 12) & 0x3f)),
-										(byte) (0x80 | ((c >> 6) & 0x3f)), (byte) (0x80 | (c & 0x3f)));
+								if((0xf0 | (c >> 18)) instanceof (byte) && (0x80 | ((c >> 12) & 0x3f)) instanceof (byte) && (0x80 | ((c >> 6) & 0x3f)) instanceof (byte) && (0x80 | (c & 0x3f)) instanceof (byte)) {
+									stream.write((byte) (0xf0 | (c >> 18)), (byte) (0x80 | ((c >> 12) & 0x3f)),
+											(byte) (0x80 | ((c >> 6) & 0x3f)), (byte) (0x80 | (c & 0x3f)));
+								}
+								
 							}
 						}
 						i++;
