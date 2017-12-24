@@ -46,8 +46,11 @@ public class CodegenAccess {
 	private static boolean nextTokenIsCommaSlowPath(JsonIterator iter, byte c) throws IOException {
 		switch (c) {
 		case ' ':
+			break;
 		case '\n':
+			break;
 		case '\r':
+			break;
 		case '\t':
 			break;
 		default:
@@ -108,14 +111,11 @@ public class CodegenAccess {
 		}
 	}
 
-	public static final <T> T read(String cacheKey, JsonIterator iter) throws IOException {
-		
-		T oggetto = null;
-		if(Codegen.getDecoder(cacheKey, null).decode(iter) instanceof Object)
-			oggetto = (T) Codegen.getDecoder(cacheKey, null).decode(iter);
-		
-		return oggetto;
-	}
+	/*
+	 * public static final <T> T read(String cacheKey, JsonIterator iter) throws
+	 * IOException { return (T) Codegen.getDecoder(cacheKey, null).decode(iter);
+	 * }
+	 */
 
 	public static boolean readArrayStart(JsonIterator iter) throws IOException {
 		byte c = IterImpl.nextToken(iter);
@@ -182,8 +182,11 @@ public class CodegenAccess {
 			byte c = iter.buf[i];
 			switch (c) {
 			case ' ':
+				continue;
 			case '\n':
+				continue;
 			case '\t':
+				continue;
 			case '\r':
 				continue;
 			default:
