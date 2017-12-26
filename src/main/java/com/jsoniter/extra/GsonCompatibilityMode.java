@@ -304,7 +304,8 @@ public class GsonCompatibilityMode extends Config {
 					stream.write('"');
 					int _surrogate = 0;
 					int i = 0;
-					while (i < value.length()) {
+					int n = value.length();
+					while (i < n) {
 						int c = value.charAt(i);
 						String replacement = null;
 						if (c < 128) {

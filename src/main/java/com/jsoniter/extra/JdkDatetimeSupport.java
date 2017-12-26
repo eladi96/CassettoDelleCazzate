@@ -51,7 +51,8 @@ public class JdkDatetimeSupport {
 	LocalDate fromCustomPattern = LocalDate.parse("20.01.2014", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
     ;
 
-    public static synchronized void enable(String pattern) {
+    public static void enable(String pattern) {
+    	synchronized (JdkDatetimeSupport.class) {
         if (JdkDatetimeSupport.pattern != "") {
             throw new JsonException("JdkDatetimeSupport.enable can only be called once");
         }
@@ -77,6 +78,7 @@ public class JdkDatetimeSupport {
                 }
             }
         });
+    	}
     }
 	protected static DateFormat get() {
 		// TODO Auto-generated method stub

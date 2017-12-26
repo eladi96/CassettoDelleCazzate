@@ -145,7 +145,8 @@ class ObjectLazyAny extends LazyAny {
                     return value;
                 }
             }
-            while (CodegenAccess.nextToken(iter) == ',') {
+            byte b = CodegenAccess.nextToken(iter);
+            while (b == ',') {
                 String field = CodegenAccess.readObjectFieldAsString(iter);
                 value = iter.readAny();
                 cache.put(field, value);
@@ -181,7 +182,9 @@ class ObjectLazyAny extends LazyAny {
                 String field = CodegenAccess.readObjectFieldAsString(iter);
                 cache.put(field, iter.readAny());
             }
-            while (CodegenAccess.nextToken(iter) == ',') {
+            byte b = CodegenAccess.nextToken(iter);
+            while (b == ',') {
+
                 String field = CodegenAccess.readObjectFieldAsString(iter);
                 cache.put(field, iter.readAny());
             }
