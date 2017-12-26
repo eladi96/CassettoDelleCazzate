@@ -494,8 +494,8 @@ public class GsonCompatibilityMode extends Config {
 		FieldNamingStrategy fieldNamingStrategy = builder().fieldNamingStrategy;
 		for (Binding binding : desc.allBindings()) {
 			if (binding.method != null) {
-				binding.toNames = new String[0];
-				binding.fromNames = new String[0];
+				binding.toNames = newStringArray(0);
+				binding.fromNames = newStringArray(0);
 			}
 			if (fieldNamingStrategy != null && binding.field != null) {
 				String translated = fieldNamingStrategy.translateName(binding.field);
@@ -505,13 +505,13 @@ public class GsonCompatibilityMode extends Config {
 			if (builder().version != null) {
 				Since since = binding.getAnnotation(Since.class);
 				if (since != null && builder().version < since.value()) {
-					binding.toNames = new String[0];
-					binding.fromNames = new String[0];
+					binding.toNames = newStringArray(0);
+					binding.fromNames = newStringArray(0);
 				}
 				Until until = binding.getAnnotation(Until.class);
 				if (until != null && builder().version >= until.value()) {
-					binding.toNames = new String[0];
-					binding.fromNames = new String[0];
+					binding.toNames = newStringArray(0);
+					binding.fromNames = newStringArray(0);
 				}
 			}
 			for (ExclusionStrategy strategy : builder().serializationExclusionStrategies) {
@@ -650,5 +650,10 @@ public class GsonCompatibilityMode extends Config {
 			};
 		}
 		return null;
+	}
+	
+	//CREATA DA ENRICO
+	String[] newStringArray(int n) {
+		return new String[n];
 	}
 }
