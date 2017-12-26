@@ -499,8 +499,10 @@ public class GsonCompatibilityMode extends Config {
 			}
 			if (fieldNamingStrategy != null && binding.field != null) {
 				String translated = fieldNamingStrategy.translateName(binding.field);
-				binding.toNames = new String[] { translated };
-				binding.fromNames = new String[] { translated };
+				binding.toNames = newStringArray(1);
+				binding.toNames[0] = translated;
+				binding.fromNames = newStringArray(1);
+				binding.fromNames[0] = translated;
 			}
 			if (builder().version != null) {
 				Since since = binding.getAnnotation(Since.class);
