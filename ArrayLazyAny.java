@@ -177,7 +177,8 @@ class ArrayLazyAny extends LazyAny {
 				i = 1;
 			}
 			byte b = CodegenAccess.nextToken(iter);
-			while (b == ',') {
+			int n = b;
+			while (n == ',') {
 				Any element = iter.readAny();
 				cache.add(element);
 				if (i++ == target) {
@@ -185,6 +186,7 @@ class ArrayLazyAny extends LazyAny {
 					return element;
 				}
 				b = CodegenAccess.nextToken(iter);
+				n = b;
 			}
 			lastParsedPos = tail;
 		} catch (IOException e) {
