@@ -9,9 +9,10 @@ import com.jsoniter.spi.*;
  *
  */
 public class NamingStrategySupport {
-	
-	private NamingStrategySupport() {}
-	
+
+	private NamingStrategySupport() {
+	}
+
 	/**
 	 * Public Interface NamingStrategy.
 	 * 
@@ -19,12 +20,23 @@ public class NamingStrategySupport {
 	 *
 	 */
 	public interface NamingStrategy {
+		/**
+		 *String translate(String input);
+		 * 
+		 * @author MaxiBon
+		 *
+		 */
+		
 		String translate(String input);
 	}
 
-	private static boolean enabled = false;
+	/**
+	 * enable
+	 * 
+	 */
 
 	public static void enable(final NamingStrategy namingStrategy) {
+		boolean enabled = false;
 		synchronized (NamingStrategySupport.class) {
 			if (enabled) {
 				throw new JsonException("NamingStrategySupport.enable can only be called once");
@@ -48,6 +60,7 @@ public class NamingStrategySupport {
 			});
 		}
 	}
+
 	/**
 	 * public static NamingStrategy SNAKE_CASE = new NamingStrategy()
 	 * 
@@ -55,12 +68,13 @@ public class NamingStrategySupport {
 	 *
 	 */
 
-
 	public static NamingStrategy SNAKE_CASE = new NamingStrategy() {
 		@Override
 		public String translate(String input) {
-			if (input == null)
+			if (input == null) {
 				return input; // garbage in, garbage out
+			}
+
 			int length = input.length();
 			StringBuilder result = new StringBuilder(length * 2);
 			int resultLength = 0;
@@ -111,12 +125,11 @@ public class NamingStrategySupport {
 		}
 	};
 	/**
-	 * public static NamingStrategy LOWER_CASE = new NamingStrategy() 
+	 * public static NamingStrategy LOWER_CASE = new NamingStrategy()
 	 * 
 	 * @author MaxiBon
 	 *
 	 */
-
 
 	public NamingStrategy LOWER_CASE = new NamingStrategy() {
 		@Override
@@ -131,12 +144,13 @@ public class NamingStrategySupport {
 	 *
 	 */
 
-
 	public NamingStrategy KEBAB_CASE = new NamingStrategy() {
 		@Override
 		public String translate(String input) {
-			if (input == null)
+			if (input == null) {
 				return input; // garbage in, garbage out
+			}
+
 			int length = input.length();
 			if (length == 0) {
 				return input;

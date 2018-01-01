@@ -12,10 +12,20 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * class CodegenImplNative
+ * 
+ * @author MaxiBon
+ *
+ */
 class CodegenImplNative {
-	
-	private CodegenImplNative() {}
-	
+
+	private CodegenImplNative() {
+	}
+
+	/**
+	 * 
+	 */
 	final static Map<String, String> NATIVE_READS = new HashMap<String, String>() {
 		{
 			put("float", "iter.readFloat()");
@@ -42,6 +52,9 @@ class CodegenImplNative {
 			put(Any.class.getName(), "iter.readAny()");
 		}
 	};
+	/**
+	 * 
+	 */
 	final static Map<Class, Decoder> NATIVE_DECODERS = new HashMap<Class, Decoder>() {
 		{
 			put(float.class, new Decoder() {
@@ -173,6 +186,12 @@ class CodegenImplNative {
 		}
 	};
 
+	/**
+	 * genReadOp.
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public static String genReadOp(Type type) {
 		String cacheKey = TypeLiteral.create(type).getDecoderCacheKey();
 		return String.format("(%s)%s", getTypeName(type), genReadOp(cacheKey, type));
@@ -196,6 +215,11 @@ class CodegenImplNative {
 		}
 	}
 
+	/**
+	 * 
+	 * @param field
+	 * @return
+	 */
 	static String genField(Binding field) {
 		String fieldCacheKey = field.decoderCacheKey();
 		Type fieldType = field.valueType;
@@ -207,7 +231,8 @@ class CodegenImplNative {
 		// the field decoder might be registered directly
 		Decoder decoder = JsoniterSpi.getDecoder(cacheKey);
 		if (decoder == null) {
-			// if cache key is for field, and there is no field decoder specified
+			// if cache key is for field, and there is no field decoder
+			// specified
 			// update cache key for normal type
 			cacheKey = TypeLiteral.create(valueType).getDecoderCacheKey();
 			decoder = JsoniterSpi.getDecoder(cacheKey);
@@ -225,14 +250,16 @@ class CodegenImplNative {
 				if (Codegen.canStaticAccess(cacheKey)) {
 					return String.format("%s.decode_(iter)", cacheKey);
 				} else {
-					// can not use static "decode_" method to access, go through codegen cache
+					// can not use static "decode_" method to access, go through
+					// codegen cache
 					return String.format("com.jsoniter.CodegenAccess.read(\"%s\", iter)", cacheKey);
 				}
 			}
 		}
 		if (valueType == boolean.class) {
 			if (!(decoder instanceof Decoder.BooleanDecoder)) {
-				throw new JsonException("decoder for " + cacheKey + "must implement Decoder.BooleanDecoder");
+				String stringa = "decoder for " + cacheKey + "must implement Decoder.BooleanDecoder";
+				throw new JsonException(stringa);
 			}
 			return String.format("com.jsoniter.CodegenAccess.readBoolean(\"%s\", iter)", cacheKey);
 		}
