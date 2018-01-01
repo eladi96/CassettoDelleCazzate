@@ -70,17 +70,17 @@ public class NamingStrategySupport {
 
 	public static NamingStrategy SNAKE_CASE = new NamingStrategy() {
 		@Override
-		public String translate(String input) {
-			if (input == null) {
-				return input; // garbage in, garbage out
+		public String translate(String inputString) {
+			if (inputString == null) {
+				return inputString; // garbage in, garbage out
 			}
 
-			int length = input.length();
+			int length = inputString.length();
 			StringBuilder result = new StringBuilder(length * 2);
 			int resultLength = 0;
 			boolean wasPrevTranslated = false;
 			for (int i = 0; i < length; i++) {
-				char c = input.charAt(i);
+				char c = inputString.charAt(i);
 				if (i > 0 || c != '_') // skip first starting underscore
 				{
 					if (Character.isUpperCase(c)) {
@@ -97,7 +97,7 @@ public class NamingStrategySupport {
 					resultLength++;
 				}
 			}
-			return resultLength > 0 ? result.toString() : input;
+			return resultLength > 0 ? result.toString() : inputString;
 		}
 	};
 	/**
@@ -109,17 +109,17 @@ public class NamingStrategySupport {
 
 	public NamingStrategy UPPER_CAMEL_CASE = new NamingStrategy() {
 		@Override
-		public String translate(String input) {
-			if (input == null || input.length() == 0) {
-				return input; // garbage in, garbage out
+		public String translate(String inputString) {
+			if (inputString == null || inputString.length() == 0) {
+				return inputString; // garbage in, garbage out
 			}
 			// Replace first lower-case letter with upper-case equivalent
-			char c = input.charAt(0);
+			char c = inputString.charAt(0);
 			char uc = Character.toUpperCase(c);
 			if (c == uc) {
-				return input;
+				return inputString;
 			}
-			StringBuilder sb = new StringBuilder(input);
+			StringBuilder sb = new StringBuilder(inputString);
 			sb.setCharAt(0, uc);
 			return sb.toString();
 		}
@@ -133,8 +133,8 @@ public class NamingStrategySupport {
 
 	public NamingStrategy LOWER_CASE = new NamingStrategy() {
 		@Override
-		public String translate(String input) {
-			return input.toLowerCase();
+		public String translate(String inputString) {
+			return inputString.toLowerCase();
 		}
 	};
 	/**
@@ -146,14 +146,14 @@ public class NamingStrategySupport {
 
 	public NamingStrategy KEBAB_CASE = new NamingStrategy() {
 		@Override
-		public String translate(String input) {
-			if (input == null) {
-				return input; // garbage in, garbage out
+		public String translate(String inputString) {
+			if (inputString == null) {
+				return inputString; // garbage in, garbage out
 			}
 
-			int length = input.length();
+			int length = inputString.length();
 			if (length == 0) {
-				return input;
+				return inputString;
 			}
 
 			StringBuilder result = new StringBuilder(length + (length >> 1));
@@ -161,7 +161,7 @@ public class NamingStrategySupport {
 			int upperCount = 0;
 
 			for (int i = 0; i < length; ++i) {
-				char ch = input.charAt(i);
+				char ch = inputString.charAt(i);
 				char lc = Character.toLowerCase(ch);
 
 				if (lc == ch) { // lower-case letter means we can get new word

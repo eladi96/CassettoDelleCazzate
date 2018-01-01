@@ -255,8 +255,8 @@ public class JsonIterator implements Closeable {
 		boolean handle(JsonIterator iter, Object attachment) throws IOException;
 	}
 
-	public final boolean readArrayCB(ReadArrayCallback callback, Object attachment) throws IOException {
-		return IterImplArray.readArrayCB(this, callback, attachment);
+	public final boolean readArrayCB(ReadArrayCallback callback, Object attachmentObj) throws IOException {
+		return IterImplArray.readArrayCB(this, callback, attachmentObj);
 	}
 
 	public final String readString() throws IOException {
@@ -287,8 +287,8 @@ public class JsonIterator implements Closeable {
 		boolean handle(JsonIterator iter, String field, Object attachment) throws IOException;
 	}
 
-	public final void readObjectCB(ReadObjectCallback cb, Object attachment) throws IOException {
-		IterImplObject.readObjectCB(this, cb, attachment);
+	public final void readObjectCB(ReadObjectCallback cb, Object attachmentObj) throws IOException {
+		IterImplObject.readObjectCB(this, cb, attachmentObj);
 	}
 
 	public final float readFloat() throws IOException {
@@ -335,9 +335,9 @@ public class JsonIterator implements Closeable {
 
 	private final static ReadArrayCallback fillArray = new ReadArrayCallback() {
 		@Override
-		public boolean handle(JsonIterator iter, Object attachment) throws IOException {
-			if (attachment instanceof List) {
-				List list = (List) attachment;
+		public boolean handle(JsonIterator iter, Object attachmentObj) throws IOException {
+			if (attachmentObj instanceof List) {
+				List list = (List) attachmentObj;
 				list.add(iter.read());
 				return true;
 			}
@@ -348,9 +348,9 @@ public class JsonIterator implements Closeable {
 
 	private final static ReadObjectCallback fillObject = new ReadObjectCallback() {
 		@Override
-		public boolean handle(JsonIterator iter, String field, Object attachment) throws IOException {
-			if (attachment instanceof Map) {
-				Map map = (Map) attachment;
+		public boolean handle(JsonIterator iter, String field, Object attachmentObj) throws IOException {
+			if (attachmentObj instanceof Map) {
+				Map map = (Map) attachmentObj;
 				map.put(field, iter.read());
 				return true;
 			}

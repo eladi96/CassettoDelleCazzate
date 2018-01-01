@@ -104,16 +104,16 @@ class ObjectLazyAny extends LazyAny {
 	}
 
 	@Override
-	public Any get(Object[] keys, int idx) {
-		if (idx == keys.length) {
+	public Any get(Object[] keysArray, int idx) {
+		if (idx == keysArray.length) {
 			return this;
 		}
-		Object key = keys[idx];
+		Object key = keysArray[idx];
 		if (isWildcard(key)) {
 			fillCache();
 			HashMap<String, Any> result = new HashMap<String, Any>();
 			for (Map.Entry<String, Any> entry : cache.entrySet()) {
-				Any mapped = entry.getValue().get(keys, idx + 1);
+				Any mapped = entry.getValue().get(keysArray, idx + 1);
 				if (mapped.valueType() != ValueType.INVALID) {
 					result.put(entry.getKey(), mapped);
 				}
@@ -122,9 +122,9 @@ class ObjectLazyAny extends LazyAny {
 		}
 		Any child = fillCacheUntil(key);
 		if (child == null) {
-			return new NotFoundAny(keys, idx, object());
+			return new NotFoundAny(keysArray, idx, object());
 		}
-		return child.get(keys, idx + 1);
+		return child.get(keysArray, idx + 1);
 	}
 
 	private Any fillCacheUntil(Object target) {

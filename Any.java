@@ -142,8 +142,8 @@ public abstract class Any implements Iterable<Any> {
 
 	public abstract ValueType valueType();
 
-	public <T> T bindTo(T obj, Object... keys) {
-		return get(keys).bindTo(obj);
+	public <T> T bindTo(T obj, Object... keys_) {
+		return get(keys_).bindTo(obj);
 	}
 
 	public <T> T bindTo(T obj) {
@@ -154,8 +154,8 @@ public abstract class Any implements Iterable<Any> {
 		return oggetto;
 	}
 
-	public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj, Object... keys) {
-		return get(keys).bindTo(typeLiteral, obj);
+	public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj, Object... keys_) {
+		return get(keys_).bindTo(typeLiteral, obj);
 	}
 
 	public <T> T bindTo(TypeLiteral<T> typeLiteral, T obj) {
@@ -166,8 +166,8 @@ public abstract class Any implements Iterable<Any> {
 		return oggetto;
 	}
 
-	public Object object(Object... keys) {
-		return get(keys).object();
+	public Object object(Object... keys_) {
+		return get(keys_).object();
 	}
 
 	public abstract Object object();
@@ -190,8 +190,8 @@ public abstract class Any implements Iterable<Any> {
 		return list;
 	}
 
-	public <T> T as(Class<T> clazz, Object... keys) {
-		return get(keys).as(clazz);
+	public <T> T as(Class<T> clazz, Object... keys_) {
+		return get(keys_).as(clazz);
 	}
 
 	public <T> T as(Class<T> clazz) {
@@ -202,8 +202,8 @@ public abstract class Any implements Iterable<Any> {
 		return oggetto;
 	}
 
-	public <T> T as(TypeLiteral<T> typeLiteral, Object... keys) {
-		return get(keys).as(typeLiteral);
+	public <T> T as(TypeLiteral<T> typeLiteral, Object... keys_) {
+		return get(keys_).as(typeLiteral);
 	}
 
 	public <T> T as(TypeLiteral<T> typeLiteral) {
@@ -214,38 +214,38 @@ public abstract class Any implements Iterable<Any> {
 		return oggetto;
 	}
 
-	public final boolean toBoolean(Object... keys) {
-		return get(keys).toBoolean();
+	public final boolean toBoolean(Object... keys_) {
+		return get(keys_).toBoolean();
 	}
 
 	public abstract boolean toBoolean();
 
-	public final int toInt(Object... keys) {
-		return get(keys).toInt();
+	public final int toInt(Object... keys_) {
+		return get(keys_).toInt();
 	}
 
 	public abstract int toInt();
 
-	public final long toLong(Object... keys) {
-		return get(keys).toLong();
+	public final long toLong(Object... keys_) {
+		return get(keys_).toLong();
 	}
 
 	public abstract long toLong();
 
-	public final float toFloat(Object... keys) {
-		return get(keys).toFloat();
+	public final float toFloat(Object... keys_) {
+		return get(keys_).toFloat();
 	}
 
 	public abstract float toFloat();
 
-	public final double toDouble(Object... keys) {
-		return get(keys).toDouble();
+	public final double toDouble(Object... keys_) {
+		return get(keys_).toDouble();
 	}
 
 	public abstract double toDouble();
 
-	public final String toString(Object... keys) {
-		return get(keys).toString();
+	public final String toString(Object... keys_) {
+		return get(keys_).toString();
 	}
 
 	public abstract String toString();
@@ -279,19 +279,19 @@ public abstract class Any implements Iterable<Any> {
 		return new NotFoundAny(index, object());
 	}
 
-	public Any get(Object key) {
-		return new NotFoundAny(key, object());
+	public Any get(Object keyElement) {
+		return new NotFoundAny(keyElement, object());
 	}
 
-	public final Any get(Object... keys) {
-		return get(keys, 0);
+	public final Any get(Object... keys_) {
+		return get(keys_, 0);
 	}
 
-	public Any get(Object[] keys, int idx) {
-		if (idx == keys.length) {
+	public Any get(Object[] keysArray, int idx) {
+		if (idx == keysArray.length) {
 			return this;
 		}
-		return new NotFoundAny(keys, idx, object());
+		return new NotFoundAny(keysArray, idx, object());
 	}
 
 	public Any set(int newVal) {
@@ -411,8 +411,8 @@ public abstract class Any implements Iterable<Any> {
 	private final static int wildcardHashCode = Character.valueOf('*').hashCode();
 	private final static Character wildcard = '*';
 
-	protected boolean isWildcard(Object key) {
-		return wildcardHashCode == key.hashCode() && wildcard.equals(key);
+	protected boolean isWildcard(Object keyElement) {
+		return wildcardHashCode == keyElement.hashCode() && wildcard.equals(keyElement);
 	}
 
 	@Override

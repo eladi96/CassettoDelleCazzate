@@ -40,9 +40,9 @@ class CodegenImplNative {
 		{
 			put(boolean.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Boolean) {
-						stream.writeVal((Boolean) obj);
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Boolean) {
+						stream_.writeVal((Boolean) oggetto);
 					}
 
 					else {
@@ -52,10 +52,10 @@ class CodegenImplNative {
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Boolean val = null;
-					if (obj instanceof Boolean) {
-						val = (Boolean) obj;
+					if (oggetto instanceof Boolean) {
+						val = (Boolean) oggetto;
 					}
 
 					return Any.wrap((boolean) val);
@@ -63,9 +63,9 @@ class CodegenImplNative {
 			});
 			put(Boolean.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Boolean) {
-						stream.writeVal(Boolean.parseBoolean(obj.toString()));
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Boolean) {
+						stream_.writeVal(Boolean.parseBoolean(oggetto.toString()));
 					}
 
 					else {
@@ -75,10 +75,10 @@ class CodegenImplNative {
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Boolean val = null;
-					if (obj instanceof Boolean) {
-						val = Boolean.parseBoolean(obj.toString());
+					if (oggetto instanceof Boolean) {
+						val = Boolean.parseBoolean(oggetto.toString());
 					}
 
 					return Any.wrap((boolean) val);
@@ -86,9 +86,9 @@ class CodegenImplNative {
 			});
 			put(byte.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Byte) {
-						stream.writeVal(((Byte) obj).shortValue());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Byte) {
+						stream_.writeVal(((Byte) oggetto).shortValue());
 					}
 
 					else {
@@ -98,10 +98,10 @@ class CodegenImplNative {
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Byte val = null;
-					if (obj instanceof Byte) {
-						val = (Byte) obj;
+					if (oggetto instanceof Byte) {
+						val = (Byte) oggetto;
 					}
 
 					return Any.wrap(val.intValue());
@@ -109,9 +109,9 @@ class CodegenImplNative {
 			});
 			put(Byte.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Byte) {
-						stream.writeVal((Byte.valueOf(Byte.parseByte(obj.toString()))).shortValue());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Byte) {
+						stream_.writeVal((Byte.valueOf(Byte.parseByte(oggetto.toString()))).shortValue());
 					}
 
 					else {
@@ -121,10 +121,10 @@ class CodegenImplNative {
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Byte val = null;
-					if (obj instanceof Byte) {
-						val = Byte.parseByte(obj.toString());
+					if (oggetto instanceof Byte) {
+						val = Byte.parseByte(oggetto.toString());
 					}
 
 					return Any.wrap(val.intValue());
@@ -132,15 +132,15 @@ class CodegenImplNative {
 			});
 			put(short.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Short val = null;
-					if (obj instanceof Short) {
-						val = (Short) obj;
+					if (oggetto instanceof Short) {
+						val = (Short) oggetto;
 					}
 
 					return Any.wrap(val.intValue());
@@ -148,15 +148,15 @@ class CodegenImplNative {
 			});
 			put(Short.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Short val = null;
-					if (obj instanceof Short) {
-						val = (Short) obj;
+					if (oggetto instanceof Short) {
+						val = (Short) oggetto;
 					}
 
 					return Any.wrap(val.intValue());
@@ -164,15 +164,15 @@ class CodegenImplNative {
 			});
 			put(int.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Integer val = null;
-					if (obj instanceof Integer) {
-						val = (Integer) obj;
+					if (oggetto instanceof Integer) {
+						val = (Integer) oggetto;
 					}
 
 					return Any.wrap((int) val);
@@ -180,9 +180,9 @@ class CodegenImplNative {
 			});
 			put(Integer.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Integer) {
-						stream.writeVal((Integer) obj);
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Integer) {
+						stream_.writeVal((Integer) oggetto);
 					}
 
 					else {
@@ -192,10 +192,10 @@ class CodegenImplNative {
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Integer val = null;
-					if (obj instanceof Integer) {
-						val = Integer.parseInt(obj.toString());
+					if (oggetto instanceof Integer) {
+						val = Integer.parseInt(oggetto.toString());
 					}
 
 					return Any.wrap((int) val);
@@ -203,18 +203,18 @@ class CodegenImplNative {
 			});
 			put(char.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Character)
-						stream.writeVal(((Character) obj).charValue());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Character)
+						stream_.writeVal(((Character) oggetto).charValue());
 					else
 						throw new IOException();
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Character val = null;
-					if (obj instanceof Character) {
-						val = (Character) obj;
+					if (oggetto instanceof Character) {
+						val = (Character) oggetto;
 					}
 
 					return Any.wrap(val.charValue());
@@ -222,9 +222,9 @@ class CodegenImplNative {
 			});
 			put(Character.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj instanceof Character) {
-						stream.writeVal(obj.toString().charAt(0));
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto instanceof Character) {
+						stream_.writeVal(oggetto.toString().charAt(0));
 					}
 
 					else {
@@ -234,10 +234,10 @@ class CodegenImplNative {
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Character val = null;
-					if (obj instanceof Character) {
-						val = obj.toString().charAt(0);
+					if (oggetto instanceof Character) {
+						val = oggetto.toString().charAt(0);
 					}
 
 					return Any.wrap(val.charValue());
@@ -245,15 +245,15 @@ class CodegenImplNative {
 			});
 			put(long.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Long val = null;
-					if (obj instanceof Long) {
-						val = (Long) obj;
+					if (oggetto instanceof Long) {
+						val = (Long) oggetto;
 					}
 
 					return Any.wrap((long) val);
@@ -261,15 +261,15 @@ class CodegenImplNative {
 			});
 			put(Long.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Long val = null;
-					if (obj instanceof Long) {
-						val = (Long) obj;
+					if (oggetto instanceof Long) {
+						val = (Long) oggetto;
 					}
 
 					return Any.wrap((long) val);
@@ -277,15 +277,15 @@ class CodegenImplNative {
 			});
 			put(float.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Float val = null;
-					if (obj instanceof Float) {
-						val = (Float) obj;
+					if (oggetto instanceof Float) {
+						val = (Float) oggetto;
 					}
 
 					return Any.wrap((float) val);
@@ -293,15 +293,15 @@ class CodegenImplNative {
 			});
 			put(Float.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Float val = null;
-					if (obj instanceof Float) {
-						val = (Float) obj;
+					if (oggetto instanceof Float) {
+						val = (Float) oggetto;
 					}
 
 					return Any.wrap((float) val);
@@ -309,15 +309,15 @@ class CodegenImplNative {
 			});
 			put(double.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Double val = null;
-					if (obj instanceof Double) {
-						val = (Double) obj;
+					if (oggetto instanceof Double) {
+						val = (Double) oggetto;
 					}
 
 					return Any.wrap((double) val);
@@ -325,15 +325,15 @@ class CodegenImplNative {
 			});
 			put(Double.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					Double val = null;
-					if (obj instanceof Double) {
-						val = (Double) obj;
+					if (oggetto instanceof Double) {
+						val = (Double) oggetto;
 					}
 
 					return Any.wrap((double) val);
@@ -341,15 +341,15 @@ class CodegenImplNative {
 			});
 			put(String.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					stream.writeVal(obj.toString());
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					stream_.writeVal(oggetto.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
+				public Any wrap(Object oggetto) {
 					String val = null;
-					if (obj instanceof String) {
-						val = (String) obj;
+					if (oggetto instanceof String) {
+						val = (String) oggetto;
 					}
 
 					return Any.wrap(val);
@@ -357,54 +357,54 @@ class CodegenImplNative {
 			});
 			put(Object.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
-					if (obj != null && obj.getClass() == Object.class) {
-						stream.writeEmptyObject();
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
+					if (oggetto != null && oggetto.getClass() == Object.class) {
+						stream_.writeEmptyObject();
 						return;
 					}
-					stream.writeVal(obj);
+					stream_.writeVal(oggetto);
 				}
 
 				@Override
-				public Any wrap(Object obj) {
-					if (obj != null && obj.getClass() == Object.class) {
+				public Any wrap(Object oggetto) {
+					if (oggetto != null && oggetto.getClass() == Object.class) {
 						return Any.rewrap(new HashMap<String, Any>());
 					}
-					return CodegenAccess.wrap(obj);
+					return CodegenAccess.wrap(oggetto);
 				}
 			});
 
 			put(BigDecimal.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
 					BigDecimal val = null;
-					if (obj instanceof BigDecimal) {
-						val = (BigDecimal) obj;
+					if (oggetto instanceof BigDecimal) {
+						val = (BigDecimal) oggetto;
 					}
 
-					stream.writeRaw(val.toString());
+					stream_.writeRaw(val.toString());
 				}
 
 				@Override
-				public Any wrap(Object obj) {
-					return Any.wrap(obj.toString());
+				public Any wrap(Object oggetto) {
+					return Any.wrap(oggetto.toString());
 				}
 			});
 			put(BigInteger.class, new Encoder.ReflectionEncoder() {
 				@Override
-				public void encode(Object obj, JsonStream stream) throws IOException {
+				public void encode(Object oggetto, JsonStream stream_) throws IOException {
 					BigInteger val = null;
-					if (obj instanceof BigInteger) {
-						val = (BigInteger) obj;
+					if (oggetto instanceof BigInteger) {
+						val = (BigInteger) oggetto;
 					}
 
-					stream.writeRaw(val.toString());
+					stream_.writeRaw(val.toString());
 
 				}
 
 				@Override
-				public Any wrap(Object obj) {
-					return Any.wrap(obj.toString());
+				public Any wrap(Object oggetto) {
+					return Any.wrap(oggetto.toString());
 				}
 			});
 		}

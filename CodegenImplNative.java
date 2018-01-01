@@ -59,128 +59,128 @@ class CodegenImplNative {
 		{
 			put(float.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readFloat();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readFloat();
 				}
 			});
 			put(Float.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : iter.readFloat();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : iterObj.readFloat();
 				}
 			});
 			put(double.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readDouble();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readDouble();
 				}
 			});
 			put(Double.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : iter.readDouble();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : iterObj.readDouble();
 				}
 			});
 			put(boolean.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readBoolean();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readBoolean();
 				}
 			});
 			put(Boolean.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : iter.readBoolean();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : iterObj.readBoolean();
 				}
 			});
 			put(byte.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return Byte.valueOf(Short.toString(iter.readShort()).getBytes()[0]);
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return Byte.valueOf(Short.toString(iterObj.readShort()).getBytes()[0]);
 				}
 			});
 			put(Byte.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : Short.toString(iter.readShort()).getBytes()[0];
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : Short.toString(iterObj.readShort()).getBytes()[0];
 				}
 			});
 			put(short.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readShort();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readShort();
 				}
 			});
 			put(Short.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : iter.readShort();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : iterObj.readShort();
 				}
 			});
 			put(int.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readInt();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readInt();
 				}
 			});
 			put(Integer.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : iter.readInt();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : iterObj.readInt();
 				}
 			});
 			put(char.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return Integer.toString(iter.readInt()).charAt(0);
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return Integer.toString(iterObj.readInt()).charAt(0);
 				}
 			});
 			put(Character.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : Integer.toString(iter.readInt()).charAt(0);
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : Integer.toString(iterObj.readInt()).charAt(0);
 				}
 			});
 			put(long.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readLong();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readLong();
 				}
 			});
 			put(Long.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readNull() ? null : iter.readLong();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readNull() ? null : iterObj.readLong();
 				}
 			});
 			put(BigDecimal.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readBigDecimal();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readBigDecimal();
 				}
 			});
 			put(BigInteger.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readBigInteger();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readBigInteger();
 				}
 			});
 			put(String.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readString();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readString();
 				}
 			});
 			put(Object.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.read();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.read();
 				}
 			});
 			put(Any.class, new Decoder() {
 				@Override
-				public Object decode(JsonIterator iter) throws IOException {
-					return iter.readAny();
+				public Object decode(JsonIterator iterObj) throws IOException {
+					return iterObj.readAny();
 				}
 			});
 		}
