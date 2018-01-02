@@ -75,11 +75,11 @@ public class NamingStrategySupport {
 				return stringa; // garbage in, garbage out
 			}
 
-			int length = stringa.length();
-			StringBuilder result = new StringBuilder(length * 2);
+			int lunghezza = stringa.length();
+			StringBuilder result = new StringBuilder(lunghezza * 2);
 			int resultLength = 0;
 			boolean wasPrevTranslated = false;
-			for (int i = 0; i < length; i++) {
+			for (int i = 0; i < lunghezza; i++) {
 				char c = stringa.charAt(i);
 				if (i > 0 || c != '_') // skip first starting underscore
 				{
