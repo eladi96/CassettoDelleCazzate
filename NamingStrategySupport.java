@@ -70,17 +70,17 @@ public class NamingStrategySupport {
 
 	public static NamingStrategy SNAKE_CASE = new NamingStrategy() {
 		@Override
-		public String translate(String inputString) {
-			if (inputString == null) {
-				return inputString; // garbage in, garbage out
+		public String translate(String inputString1) {
+			if (inputString1 == null) {
+				return inputString1; // garbage in, garbage out
 			}
 
-			int length = inputString.length();
+			int length = inputString1.length();
 			StringBuilder result = new StringBuilder(length * 2);
 			int resultLength = 0;
 			boolean wasPrevTranslated = false;
 			for (int i = 0; i < length; i++) {
-				char c = inputString.charAt(i);
+				char c = inputString1.charAt(i);
 				if (i > 0 || c != '_') // skip first starting underscore
 				{
 					if (Character.isUpperCase(c)) {
@@ -97,7 +97,7 @@ public class NamingStrategySupport {
 					resultLength++;
 				}
 			}
-			return resultLength > 0 ? result.toString() : inputString;
+			return resultLength > 0 ? result.toString() : inputString1;
 		}
 	};
 	/**
