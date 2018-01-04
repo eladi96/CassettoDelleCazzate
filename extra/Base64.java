@@ -89,6 +89,16 @@ import java.util.Arrays;
  */
 
 abstract class Base64 {
+	
+	/**
+	 * 
+	 */
+	private final static byte[] EMPTY_ARRAY = new byte[0];
+	/**
+	 * 
+	 */
+	static Integer intero = Integer.valueOf(0);
+
 
 	private Base64() {
 	}
@@ -118,7 +128,7 @@ abstract class Base64 {
 
 	static int encodeToChar(byte[] sArr, char[] dArr, final int start) {
 		final int sLen = sArr.length;
-
+		final int[] n = {0xff, 16, 8, 18, 0x3f, 12, 6};
 		final int eLen = (sLen / 3) * 3; // Length of even 24-bits.
 		final int dLen = ((sLen - 1) / 3 + 1) << 2; // Returned character count
 
@@ -127,28 +137,28 @@ abstract class Base64 {
 		for (int s = 0; s < eLen; s++) {
 			// Copy next three bytes into lower 24 bits of int, paying attension to sign.
 			int bitwise = Integer.getInteger(Long.toString(SupportBitwise
-					.bitwise(Long.getLong(Integer.toString(sArr[s])), Long.getLong(Integer.toString(0xff)), '&')))
+					.bitwise(Long.getLong(Integer.toString(sArr[s])), Long.getLong(Integer.toString(n[0])), '&')))
 					.intValue();
 			int i = Integer.getInteger(Long.toString(SupportBitwise.bitwise(
-					SupportBitwise.bitwise(Long.getLong(Integer.toString((bitwise) << 16)).longValue(),
-							Long.getLong(Integer.toString((bitwise) << 8)).longValue(), '|'),
+					SupportBitwise.bitwise(Long.getLong(Integer.toString((bitwise) << n[1])).longValue(),
+							Long.getLong(Integer.toString((bitwise) << n[2])).longValue(), '|'),
 					Long.getLong(Integer.toString(bitwise)).longValue(), '|'))).intValue();
 			// Encode the int into four chars
 			dArr[d++] = CA[Integer.getInteger(
-					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 18)).longValue(),
-							Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[3])).longValue(),
+							Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 					.intValue()];
 			dArr[d++] = CA[Integer.getInteger(
-					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 12)).longValue(),
-							Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[5])).longValue(),
+							Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 					.intValue()];
 			dArr[d++] = CA[Integer.getInteger(
-					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 6)).longValue(),
-							Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[6])).longValue(),
+							Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 					.intValue()];
 			dArr[d++] = CA[Integer
 					.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i)).longValue(),
-							Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+							Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 					.intValue()];
 		}
 
@@ -165,7 +175,7 @@ abstract class Base64 {
 															.getInteger(Long.toString(SupportBitwise.bitwise(
 																	Long.getLong(Integer
 																			.toString(sArr[eLen])).longValue(),
-																	Long.getLong(Integer.toString(0xff)).longValue(),
+																	Long.getLong(Integer.toString(n[0])).longValue(),
 																	'&')))
 															.intValue() << 10))).longValue(),
 													Long.getLong(
@@ -174,7 +184,7 @@ abstract class Base64 {
 																			Long.getLong(
 																					Integer.toString(sArr[sLen - 1]))
 																					.longValue(),
-																			Long.getLong(Integer.toString(0xff))
+																			Long.getLong(Integer.toString(n[0]))
 																					.longValue(),
 																			'&')))
 																	.intValue() << 2) : 0)))
@@ -185,12 +195,12 @@ abstract class Base64 {
 			dArr[start + dLen - 4] = CA[i >> 12];
 			dArr[start + dLen
 					- 3] = CA[Integer.getInteger(
-							Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 6)).longValue(),
-									Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+							Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[6])).longValue(),
+									Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 							.intValue()];
 			dArr[start + dLen - 2] = left == 2 ? CA[Integer
 					.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i)).longValue(),
-							Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+							Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 					.intValue()] : '=';
 			dArr[start + dLen - 1] = '=';
 		}
@@ -200,7 +210,7 @@ abstract class Base64 {
 
 	static int encodeToBytes(byte[] sArr, JsonStream stream) throws IOException {
 		final int sLen = sArr.length;
-
+		final int[] n = {0xff, 16, 8, 18, 0x3f, 12, 6, 10, 2};
 		final int eLen = (sLen / 3) * 3; // Length of even 24-bits.
 		final int dLen = ((sLen - 1) / 3 + 1) << 2; // Returned character count
 
@@ -208,22 +218,22 @@ abstract class Base64 {
 		for (int s = 0; s < eLen;) {
 			// Copy next three bytes into lower 24 bits of int, paying attension to sign.
 			int bitwise = Integer.getInteger(Long.toString(SupportBitwise
-					.bitwise(Long.getLong(Integer.toString(sArr[s++])), Long.getLong(Integer.toString(0xff)), '&')))
+					.bitwise(Long.getLong(Integer.toString(sArr[s++])), Long.getLong(Integer.toString(n[0])), '&')))
 					.intValue();
 			int i = Integer.getInteger(Long.toString(SupportBitwise.bitwise(
-					SupportBitwise.bitwise(Long.getLong(Integer.toString((bitwise) << 16)).longValue(),
-							Long.getLong(Integer.toString((bitwise) << 8)).longValue(), '|'),
+					SupportBitwise.bitwise(Long.getLong(Integer.toString((bitwise) << n[1])).longValue(),
+							Long.getLong(Integer.toString((bitwise) << n[2])).longValue(), '|'),
 					Long.getLong(Integer.toString(bitwise)).longValue(), '|'))).intValue();
 			// Encode the int into four chars
 			stream.write(
-					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 18)),
-							Long.getLong(Integer.toString(0x3f)), '&'))).intValue()],
-					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 12)),
-							Long.getLong(Integer.toString(0x3f)), '&'))).intValue()],
-					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> 6)),
-							Long.getLong(Integer.toString(0x3f)), '&'))).intValue()],
+					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[3])),
+							Long.getLong(Integer.toString(n[4])), '&'))).intValue()],
+					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[5])),
+							Long.getLong(Integer.toString(n[4])), '&'))).intValue()],
+					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i >>> n[6])),
+							Long.getLong(Integer.toString(n[4])), '&'))).intValue()],
 					BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i)),
-							Long.getLong(Integer.toString(0x3f)), '&'))).intValue()]);
+							Long.getLong(Integer.toString(n[4])), '&'))).intValue()]);
 		}
 
 		// Pad and encode last bits if source isn't even 24 bits.
@@ -239,16 +249,16 @@ abstract class Base64 {
 															.getInteger(Long.toString(SupportBitwise.bitwise(
 																	Long.getLong(Integer
 																			.toString((sArr[eLen]))).longValue(),
-																	Long.getLong(Integer.toString(0xff)).longValue(),
+																	Long.getLong(Integer.toString(n[0])).longValue(),
 																	'&')))
-															.intValue() << 10)).longValue(),
+															.intValue() << n[7])).longValue(),
 													Long.getLong(
-															Integer.toString(left == 2 ? ((Integer
+															Integer.toString(left == n[8] ? ((Integer
 																	.getInteger(Long.toString(SupportBitwise.bitwise(
 																			Long.getLong(
 																					Integer.toString((sArr[sLen - 1])))
 																					.longValue(),
-																			Long.getLong(Integer.toString(0xff))
+																			Long.getLong(Integer.toString(n[0]))
 																					.longValue(),
 																			'&')))
 																	.intValue()) << 2) : 0))
@@ -261,12 +271,12 @@ abstract class Base64 {
 			stream.write(BA[i >> 12],
 					BA[Integer.getInteger(
 							Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 6))).longValue(),
-									Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+									Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 							.intValue()],
-					left == 2
+					left == n[8]
 							? BA[Integer.getInteger(Long
 									.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i))).longValue(),
-											Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+											Long.getLong(Integer.toString(n[4])).longValue(), '&')))
 									.intValue()]
 							: ch,
 					ch);
@@ -276,22 +286,23 @@ abstract class Base64 {
 	}
 
 	static void encodeLongBits(long bits, JsonStream stream) throws IOException {
+		int n = 0x3f;
 		int i = (int) bits;
 		byte b1 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 18))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		byte b2 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 12))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		byte b3 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 6))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		byte b4 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		Character c = '"';
 		stream.write(c.toString().getBytes().clone()[0], b1, b2, b3, b4);
@@ -299,32 +310,33 @@ abstract class Base64 {
 		i = (int) bits;
 		b1 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 18))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		b2 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 12))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		b3 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 6))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		b4 = BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i))).longValue(),
-				Long.getLong(Integer.toString(0x3f)).longValue(), '&'))).intValue()];
+				Long.getLong(Integer.toString(n)).longValue(), '&'))).intValue()];
 		stream.write(b1, b2, b3, b4);
 		bits = (bits >>> 24) << 2;
 		i = BigDecimal.valueOf(bits).intValue();
 		b1 = BA[i >> 12];
 		b2 = BA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString((i >>> 6))).longValue(),
-						Long.getLong(Integer.toString(0x3f)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		b3 = BA[Integer.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(i)).longValue(),
-				Long.getLong(Integer.toString(0x3f)).longValue(), '&'))).intValue()];
+				Long.getLong(Integer.toString(n)).longValue(), '&'))).intValue()];
 		stream.write(b1, b2, b3, c.toString().getBytes().clone()[0]);
 	}
 
 	static long decodeLongBits(JsonIterator iter) throws IOException {
+		int[] n = {46, 6, 12, 24, 18};
 		Slice slice = iter.readStringAsSlice();
 		if (slice.len() != 11) {
 			throw iter.reportError("decodeLongBits", "must be 11 bytes for long bits encoded double");
@@ -333,24 +345,25 @@ abstract class Base64 {
 		int sIx = slice.head();
 		long i = Integer.getInteger(Long.toString(SupportBitwise.bitwise(
 				SupportBitwise.bitwise(
-						SupportBitwise.bitwise(Long.getLong(Integer.toString(IA[encoded[sIx++]] << 18)).longValue(),
-								Long.getLong(Integer.toString(IA[encoded[sIx++]] << 12)).longValue(), '|'),
-						Long.getLong(Integer.toString(IA[encoded[sIx++]] << 6)).longValue(), '|'),
+						SupportBitwise.bitwise(Long.getLong(Integer.toString(IA[encoded[sIx++]] << n[4])).longValue(),
+								Long.getLong(Integer.toString(IA[encoded[sIx++]] << n[2])).longValue(), '|'),
+						Long.getLong(Integer.toString(IA[encoded[sIx++]] << n[1])).longValue(), '|'),
 				Long.getLong(Integer.toString(IA[encoded[sIx++]])).longValue(), '|'))).intValue();
-		long bits = SupportBitwise.bitwise(i << 24, i, '|');
+		long bits = SupportBitwise.bitwise(i << n[3], i, '|');
 		i = SupportBitwise.bitwise(
-				SupportBitwise.bitwise(Long.getLong(Integer.toString(IA[encoded[sIx++]] << 12)).longValue(),
-						Long.getLong(Integer.toString(IA[encoded[sIx++]] << 6)).longValue(), '|'),
+				SupportBitwise.bitwise(Long.getLong(Integer.toString(IA[encoded[sIx++]] << n[2])).longValue(),
+						Long.getLong(Integer.toString(IA[encoded[sIx++]] << n[1])).longValue(), '|'),
 				Long.getLong(Integer.toString(IA[encoded[sIx]])).longValue(), '|');
-		bits = SupportBitwise.bitwise(i << 46, bits, '|');
+		bits = SupportBitwise.bitwise(i << n[0], bits, '|');
 		return bits;
 	}
 
 	static int findEnd(final byte[] sArr, final int start) {
+		int n = 0xff;
 		for (int i = start; i < sArr.length; i++) {
 			if (IA[Integer.getInteger(
 					Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(sArr[i])).longValue(),
-							Long.getLong(Integer.toString(0xff)).longValue(), '&')))
+							Long.getLong(Integer.toString(n)).longValue(), '&')))
 					.intValue()] < 0) {
 				return i;
 			}
@@ -359,15 +372,7 @@ abstract class Base64 {
 		return sArr.length;
 	}
 
-	/**
-	 * 
-	 */
-	private final static byte[] EMPTY_ARRAY = new byte[0];
-	/**
-	 * 
-	 */
-	static Integer intero = Integer.valueOf(0);
-
+	
 	/**
 	 * 
 	 * @param sArr
@@ -377,6 +382,7 @@ abstract class Base64 {
 	 */
 	static byte[] decodeFast(final byte[] sArr, final int start, final int end) {
 		// Check special case
+		int n = 0xff;
 		int sLen = end - start;
 		if (sLen == 0) {
 			return EMPTY_ARRAY;
@@ -388,7 +394,7 @@ abstract class Base64 {
 		// Trim illegal chars from start
 		int noMethodInWhile = IA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(sArr[sIx])).longValue(),
-						Long.getLong(Integer.toString(0xff)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		while (sIx < eIx && noMethodInWhile < 0) {
 			sIx++;
@@ -397,7 +403,7 @@ abstract class Base64 {
 		// Trim illegal chars from end
 		noMethodInWhile = IA[Integer
 				.getInteger(Long.toString(SupportBitwise.bitwise(Long.getLong(Integer.toString(sArr[eIx])).longValue(),
-						Long.getLong(Integer.toString(0xff)).longValue(), '&')))
+						Long.getLong(Integer.toString(n)).longValue(), '&')))
 				.intValue()];
 		while (eIx > 0 && noMethodInWhile < 0) {
 			eIx--;
@@ -416,11 +422,14 @@ abstract class Base64 {
 		int eLen = (len / 3) * 3;
 		for (int cc = 0; d < eLen;) {
 			// Assemble three bytes into an int from four "valid" characters.
+			int n0 = 18;
+			int n1 = 12;
+			int n2 = 6;
 			int i = Integer.getInteger(Long.toString(SupportBitwise.bitwise(
 					SupportBitwise.bitwise(
-							SupportBitwise.bitwise(Long.getLong(Integer.toString(IA[sArr[sIx++]] << 18)).longValue(),
-									Long.getLong(Integer.toString(IA[sArr[sIx++]] << 12)).longValue(), '|'),
-							Long.getLong(Integer.toString(IA[sArr[sIx++]] << 6)).longValue(), '|'),
+							SupportBitwise.bitwise(Long.getLong(Integer.toString(IA[sArr[sIx++]] << n0)).longValue(),
+									Long.getLong(Integer.toString(IA[sArr[sIx++]] << n1)).longValue(), '|'),
+							Long.getLong(Integer.toString(IA[sArr[sIx++]] << n2)).longValue(), '|'),
 					Long.getLong(Integer.toString(IA[sArr[sIx++]])).longValue(), '|'))).intValue();
 
 			// Add the bytes
