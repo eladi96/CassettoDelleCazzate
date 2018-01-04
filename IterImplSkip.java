@@ -98,13 +98,11 @@ class IterImplSkip {
 	final static int findStringEnd(JsonIterator iter) {
 		boolean escaped = false;
 		for (int i = iter.head; i < iter.tail; i++) {
-			byte c = iter.buf[i];
-			if (c == '"') {
+			if (iter.buf[i] == '"') {
 				if (!escaped) {
 					return i + 1;
 				} else {
-					int j = i - 1;
-					for (;;) {
+					for (int j = i - 1;;) {
 						if (j < iter.head || iter.buf[j] != '\\') {
 							// even number of backslashes
 							// either end of buffer, or " found
@@ -119,7 +117,7 @@ class IterImplSkip {
 						j--;
 					}
 				}
-			} else if (c == '\\') {
+			} else if (iter.buf[i] == '\\') {
 				escaped = true;
 			}
 		}
