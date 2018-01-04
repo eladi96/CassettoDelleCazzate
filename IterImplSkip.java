@@ -34,6 +34,7 @@ class IterImplSkip {
 	 * @throws IOException
 	 */
 	public static final void skip(JsonIterator iter) throws IOException {
+		int[] n = {3, 4};
 		byte c = IterImpl.nextToken(iter);
 		switch (c) {
 		case '"':
@@ -72,14 +73,11 @@ class IterImplSkip {
 		case '9':
 			IterImpl.skipUntilBreak(iter);
 			return;
-		case 't':
 		case 'n':
-			int n1 = 3;
-			IterImpl.skipFixedBytes(iter, n1); // true or null
+			IterImpl.skipFixedBytes(iter, n[0]); // true or null
 			return;
 		case 'f':
-			int n = 4;
-			IterImpl.skipFixedBytes(iter, n); // false
+			IterImpl.skipFixedBytes(iter, n[1]); // false
 			return;
 		case '[':
 			IterImpl.skipArray(iter);
@@ -98,13 +96,11 @@ class IterImplSkip {
 	final static int findStringEnd(JsonIterator iter) {
 		boolean escaped = false;
 		for (int i = iter.head; i < iter.tail; i++) {
-			byte c = iter.buf[i];
-			if (c == '"') {
+			if (iter.buf[i] == '"') {
 				if (!escaped) {
 					return i + 1;
 				} else {
-					int j = i - 1;
-					for (;;) {
+					for (int j = i - 1;;) {
 						if (j < iter.head || iter.buf[j] != '\\') {
 							// even number of backslashes
 							// either end of buffer, or " found
@@ -119,7 +115,7 @@ class IterImplSkip {
 						j--;
 					}
 				}
-			} else if (c == '\\') {
+			} else if (iter.buf[i] == '\\') {
 				escaped = true;
 			}
 		}

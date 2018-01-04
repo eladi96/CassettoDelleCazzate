@@ -86,16 +86,14 @@ class Codegen {
 			}
 			List<Extension> extensions = JsoniterSpi.getExtensions();
 			for (Extension extension : extensions) {
-				encoder = extension.createEncoder(cacheKey, type);
-				if (encoder != null) {
-					JsoniterSpi.addNewEncoder(cacheKey, encoder);
-					return encoder;
+				if (extension.createEncoder(cacheKey, type) != null) {
+					JsoniterSpi.addNewEncoder(cacheKey, extension.createEncoder(cacheKey, type));
+					return extension.createEncoder(cacheKey, type);
 				}
 			}
-			encoder = CodegenImplNative.NATIVE_ENCODERS.get(type);
-			if (encoder != null) {
-				JsoniterSpi.addNewEncoder(cacheKey, encoder);
-				return encoder;
+			if (CodegenImplNative.NATIVE_ENCODERS.get(type) != null) {
+				JsoniterSpi.addNewEncoder(cacheKey, CodegenImplNative.NATIVE_ENCODERS.get(type));
+				return CodegenImplNative.NATIVE_ENCODERS.get(type);
 			}
 			addPlaceholderEncoderToSupportRecursiveStructure(cacheKey);
 			try {
