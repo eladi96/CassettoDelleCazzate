@@ -121,6 +121,19 @@ class ReflectionObjectDecoder {
 		if (binding.fromNames.length == 0) {
 			return;
 		}
+		subAddBinding(binding);
+		binding.idx = tempIdx;
+		for (String fromName : binding.fromNames) {
+			Slice slice = Slice.make(fromName);
+			if (allBindings.containsKey(slice)) {
+				throw new JsonException("name conflict found in " + classInfo.clazz + ": " + fromName);
+			}
+			allBindings.put(slice, binding);
+		}
+		tempIdx++;
+	}
+	
+	private void subAddBinding(final Binding binding) {
 		if (binding.asMissingWhenNotPresent) {
 			binding.mask = 1L << requiredIdx;
 			requiredIdx++;
@@ -140,15 +153,6 @@ class ReflectionObjectDecoder {
 		if (binding.decoder == null) {
 			binding.decoder = Codegen.getDecoder(binding.valueTypeLiteral.getDecoderCacheKey(), binding.valueType);
 		}
-		binding.idx = tempIdx;
-		for (String fromName : binding.fromNames) {
-			Slice slice = Slice.make(fromName);
-			if (allBindings.containsKey(slice)) {
-				throw new JsonException("name conflict found in " + classInfo.clazz + ": " + fromName);
-			}
-			allBindings.put(slice, binding);
-		}
-		tempIdx++;
 	}
 
 	public Decoder create() {
