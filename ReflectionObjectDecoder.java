@@ -392,8 +392,6 @@ class ReflectionObjectDecoder {
 			} else {
 				Object[] temp = (Object[]) iter.tempObjects.get(tempCacheKey);
 				subDecode1(iter, extra, obj, tracker, temp);
-				setExtra(obj, extra);
-				applyWrappers(temp, obj);
 			}
 			return obj;
 		}
@@ -419,7 +417,6 @@ class ReflectionObjectDecoder {
 				setToBinding(obj, binding, decodeBinding(iter, obj, binding));
 			}
 		}
-		
 		subDecode2(iter, extra, obj, tracker, temp, binding, fieldName);
 	}
 	
@@ -449,6 +446,8 @@ class ReflectionObjectDecoder {
 				setToBinding(obj, desc.onMissingProperties, collectMissingFields(tracker));
 			}
 		}
+		setExtra(obj, extra);
+		applyWrappers(temp, obj);
 	}
 
 	private void setToBinding(Object obj, Binding binding, Object value)
