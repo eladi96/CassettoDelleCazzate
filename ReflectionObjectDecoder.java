@@ -204,12 +204,12 @@ class ReflectionObjectDecoder {
 				}
 				return obj;
 			}
-			subDecode1(iter, obj);			
+			Map<String, Object> extra = null;
+			subDecode1(iter, obj, extra);			
 			return obj;
 		}
 		
-		private void subDecode1(JsonIterator iter, Object obj) throws ReflectiveOperationException, IllegalArgumentException, IOException {
-			Map<String, Object> extra = null;
+		private void subDecode1(JsonIterator iter, Object obj, Map<String, Object> extra) throws ReflectiveOperationException, IllegalArgumentException, IOException {
 			long tracker = 0L;
 			Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
 			Binding binding = allBindings.get(fieldName);
@@ -275,7 +275,6 @@ class ReflectionObjectDecoder {
 		}
 
 		private Object decode_(JsonIterator iter) throws Exception {
-			Map<String, Object> extra = null;
 			if (iter.readNull()) {
 				CodegenAccess.resetExistingObject(iter);
 				return null;
@@ -292,6 +291,7 @@ class ReflectionObjectDecoder {
 					}
 					return createNewObject(iter, temp);
 				}
+				Map<String, Object> extra = null;
 				subDecode1(extra, iter, temp);
 				Object obj = createNewObject(iter, temp);
 				subDecode2(obj, extra, temp);
