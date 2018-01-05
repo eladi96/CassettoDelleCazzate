@@ -16,7 +16,8 @@ class ReflectionArrayDecoder implements Decoder {
 
 	private final Class componentType;
 	private final Decoder compTypeDecoder;
-	private int[] nV = {2, 3, 8};
+	private final int[]  nV = {2, 3, 8, 1, 4};
+
 	/**
 	 * ReflectionArrayDecoder
 	 * 
@@ -29,91 +30,84 @@ class ReflectionArrayDecoder implements Decoder {
 
 	@Override
 	public Object decode(JsonIterator iter) throws IOException {
-		
 		CodegenAccess.resetExistingObject(iter);
 		if (iter.readNull()) {
 			return null;
 		}
-		
 		if (!CodegenAccess.readArrayStart(iter)) {
 			return Array.newInstance(componentType, 0);
 		}
 		
-		Object a1 = compTypeDecoder.decode(iter);
 		if (CodegenAccess.nextToken(iter) != ',') {
-			return subDecode1(a1);
+			return subDecode(nV[3], iter);
 		}
 		
-		Object a2 = compTypeDecoder.decode(iter);
 		if (CodegenAccess.nextToken(iter) != ',') {
-			return subDecode2(a1, a2);
+			return subDecode(nV[0], iter);
 		}
 		
-		Object a3 = compTypeDecoder.decode(iter);
 		if (CodegenAccess.nextToken(iter) != ',') {
-			return subDecode3(a1, a2, a3);
+			return subDecode(nV[1], iter);
 		}
 		
-		Object a4 = compTypeDecoder.decode(iter);
-		Object arr = subDecode4(a1, a2, a3, a4);
-		Integer i = 4;
-		Integer arrLen = 8;
-		Integer intNum = Integer.valueOf(CodegenAccess.nextToken(iter));
-		while (intNum.intValue() == ',') {
-			intNum = whileSupport(intNum, arrLen, arrLen, iter);
+		Object arr = subDecode(nV[4], iter);
+		
+		int i = 4;
+		int arrLen = 8;
+		byte b = CodegenAccess.nextToken(iter);
+		int intero = b;
+		while (intero == ',') {
+			if (i == arrLen) {
+				int n = 2 * arrLen;
+				Object newArr = Array.newInstance(componentType, n);
+				System.arraycopy(arr, 0, newArr, 0, arrLen);
+				arr = newArr;
+				arrLen = 2 * arrLen;
+			}
+			Array.set(arr, i++, compTypeDecoder.decode(iter));
+			b = CodegenAccess.nextToken(iter);
+			intero = b;
 		}
-		if (i.intValue() == arrLen.intValue()) {
+		if (i == arrLen) {
 			return arr;
 		}
-		
-		return subDecode5(arr, i);
-	}
-	
-	Object subDecode1(Object a1) {
-		Object arr = Array.newInstance(componentType, 1);
-		Array.set(arr, 0, a1);
-		return arr;
-	}
-	
-	Object subDecode2(Object a1, Object a2) {
-		Object arr = Array.newInstance(componentType, nV[0]);
-		Array.set(arr, 0, a1);
-		Array.set(arr, 1, a2);
-		return arr;
-	}
-	
-	Object subDecode3(Object a1, Object a2, Object a3) {
-		Object arr = Array.newInstance(componentType, nV[1]);
-		Array.set(arr, 0, a1);
-		Array.set(arr, 1, a2);
-		Array.set(arr, nV[0], a3);
-		return arr;
-	}
-	
-	Object subDecode4(Object a1, Object a2, Object a3, Object a4) {
-		Object arr = Array.newInstance(componentType, nV[2]);
-		Array.set(arr, 0, a1);
-		Array.set(arr, 1, a2);
-		Array.set(arr, nV[0], a3);
-		Array.set(arr, nV[1], a4);
-		return arr;		
-	}
-	
-	Integer whileSupport(Integer i, Integer arrLen, Object arr, JsonIterator iter) throws IOException {
-		if (i.intValue() == arrLen.intValue()) {
-			int n = 2 * arrLen.intValue();
-			Object newArr = Array.newInstance(componentType, n);
-			System.arraycopy(arr, 0, newArr, 0, arrLen.intValue());
-			arr = newArr;
-			arrLen = Integer.valueOf(2 * arrLen.intValue());
-		}
-		Array.set(arr, i++, compTypeDecoder.decode(iter));
-		return Integer.valueOf(CodegenAccess.nextToken(iter));
-	}
-	
-	Object subDecode5(Object arr, Integer i) {
-		Object newArr = Array.newInstance(componentType, i.intValue());
-		System.arraycopy(arr, 0, newArr, 0, i.intValue());
+		Object newArr = Array.newInstance(componentType, i);
+		System.arraycopy(arr, 0, newArr, 0, i);
 		return newArr;
+	}
+	
+	Object subDecode(int i, JsonIterator iter) throws IOException {
+		
+		Object a1 = compTypeDecoder.decode(iter);
+		Object a2 = compTypeDecoder.decode(iter);
+		Object a3 = compTypeDecoder.decode(iter);
+		Object a4 = compTypeDecoder.decode(iter);		
+		Object arr = null;
+		
+		switch(i) {
+		case 1:
+			arr = Array.newInstance(componentType, 1);
+			Array.set(arr, 0, a1);
+			break;
+		case 2:
+			arr = Array.newInstance(componentType, nV[0]);
+			Array.set(arr, 0, a1);
+			Array.set(arr, 1, a2);
+			break;
+		case 3:
+			arr = Array.newInstance(componentType, nV[1]);
+			Array.set(arr, 0, a1);
+			Array.set(arr, 1, a2);
+			Array.set(arr, nV[0], a3);
+			break;
+		case 4:
+			arr = Array.newInstance(componentType, nV[2]);
+			Array.set(arr, 0, a1);
+			Array.set(arr, 1, a2);
+			Array.set(arr, nV[0], a3);
+			Array.set(arr, nV[1], a4);
+		}
+		
+		return arr;
 	}
 }
