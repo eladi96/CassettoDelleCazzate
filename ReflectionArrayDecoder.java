@@ -16,7 +16,8 @@ class ReflectionArrayDecoder implements Decoder {
 
 	private final Class componentType;
 	private final Decoder compTypeDecoder;
-	private final int[]  nV = {2, 3, 8, 1, 4};
+	private final int[]  nV = {2, 3, 8,};
+	private final int[] sD = {1, 2, 3, 4};
 
 	/**
 	 * ReflectionArrayDecoder
@@ -39,40 +40,24 @@ class ReflectionArrayDecoder implements Decoder {
 		}
 		
 		if (CodegenAccess.nextToken(iter) != ',') {
-			return subDecode(nV[3], iter);
+			return subDecode(sD[0], iter);
 		}
 		
 		if (CodegenAccess.nextToken(iter) != ',') {
-			return subDecode(nV[0], iter);
+			return subDecode(sD[1], iter);
 		}
 		
 		if (CodegenAccess.nextToken(iter) != ',') {
-			return subDecode(nV[1], iter);
+			return subDecode(sD[2], iter);
 		}
 		
-		Object arr = subDecode(nV[4], iter);
-		
-		int i = 4;
-		int arrLen = 8;
-		byte b = CodegenAccess.nextToken(iter);
-		int intero = b;
-		while (intero == ',') {
-			if (i == arrLen) {
-				int n = 2 * arrLen;
-				Object newArr = Array.newInstance(componentType, n);
-				System.arraycopy(arr, 0, newArr, 0, arrLen);
-				arr = newArr;
-				arrLen = 2 * arrLen;
-			}
-			Array.set(arr, i++, compTypeDecoder.decode(iter));
-			b = CodegenAccess.nextToken(iter);
-			intero = b;
-		}
-		if (i == arrLen) {
+		Object arr = subDecode(sD[3], iter);		
+		int[] cond = whileSupport(arr, iter);
+		if (cond[0] == cond[1]) {
 			return arr;
 		}
-		Object newArr = Array.newInstance(componentType, i);
-		System.arraycopy(arr, 0, newArr, 0, i);
+		Object newArr = Array.newInstance(componentType, cond[0]);
+		System.arraycopy(arr, 0, newArr, 0, cond[0]);
 		return newArr;
 	}
 	
@@ -106,8 +91,34 @@ class ReflectionArrayDecoder implements Decoder {
 			Array.set(arr, 1, a2);
 			Array.set(arr, nV[0], a3);
 			Array.set(arr, nV[1], a4);
+			break;
+		default:
+			break;
 		}
 		
 		return arr;
+	}
+	
+	int[] whileSupport(Object arr, JsonIterator iter) throws IOException {
+		
+		int i = 4;
+		int arrLen = 8;
+		byte b = CodegenAccess.nextToken(iter);
+		int intero = b;
+		while (intero == ',') {
+			if (i == arrLen) {
+				int n = 2 * arrLen;
+				Object newArr = Array.newInstance(componentType, n);
+				System.arraycopy(arr, 0, newArr, 0, arrLen);
+				arr = newArr;
+				arrLen = 2 * arrLen;
+			}
+			Array.set(arr, i++, compTypeDecoder.decode(iter));
+			b = CodegenAccess.nextToken(iter);
+			intero = b;
+		}
+		
+		int[] result = {i, arrLen};
+		return result;
 	}
 }
