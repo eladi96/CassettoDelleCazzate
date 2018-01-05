@@ -279,18 +279,15 @@ class ReflectionObjectDecoder {
 			}
 			if (iter.tempObjects.get(tempCacheKey) instanceof Object[]) {
 				Object[] temp = (Object[]) iter.tempObjects.get(tempCacheKey);
-				if (temp == null) {
-					temp = new Object[tempCount];
-					iter.tempObjects.put(tempCacheKey, temp);
-				}
-				Arrays.fill(temp, NOT_SET);
+				
 				if (!CodegenAccess.readObjectStart(iter)) {
 					if (requiredIdx > 0) {
 						throw new JsonException(err + collectMissingFields(0));
 					}
 					return createNewObject(iter, temp);
 				}
-				subDecode1(extra, iter, temp);
+				Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
+				subDecode1(extra, iter, temp, fieldName);
 				Object obj = createNewObject(iter, temp);
 				subDecode2(obj, extra, temp);
 				return obj;
@@ -298,9 +295,8 @@ class ReflectionObjectDecoder {
 			return null;
 		}
 		
-		private void subDecode1(Map<String, Object> extra, JsonIterator iter, Object[] temp) throws IOException {
+		private void subDecode1(Map<String, Object> extra, JsonIterator iter, Object[] temp, Slice fieldName) throws IOException {
 			long tracker = 0L;
-			Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
 			Binding binding = allBindings.get(fieldName);
 			if (binding == null) {
 				extra = onUnknownProperty(iter, fieldName, extra);
@@ -327,6 +323,7 @@ class ReflectionObjectDecoder {
 			if (tracker != expectedTracker) {
 				throw new JsonException(err + collectMissingFields(tracker));
 			}
+			
 		}
 		
 		private void subDecode2(Object obj, Map<String, Object> extra, Object[] temp) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -344,6 +341,14 @@ class ReflectionObjectDecoder {
 				}
 			}
 			applyWrappers(temp, obj);
+		}
+		
+		private void ifSupport(Object[] temp, JsonIterator iter) {
+			if (temp == null) {
+				temp = new Object[tempCount];
+				iter.tempObjects.put(tempCacheKey, temp);
+			}
+			Arrays.fill(temp, NOT_SET);
 		}
 	}
 
