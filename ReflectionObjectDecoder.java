@@ -392,7 +392,7 @@ class ReflectionObjectDecoder {
 		}
 	}
 	
-	private void subDecode1(JsonIterator iter, Map<String, Object> extra, Object obj, Object[] temp) throws Exception {
+	private void subDecode1(JsonIterator iter, Map<String, Object> extra, Object obj, Object[] temp) throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		long tracker = 0L;
 		if (temp == null) {
 			temp = new Object[tempCount];
@@ -416,7 +416,7 @@ class ReflectionObjectDecoder {
 		subDecode2(iter, extra, obj, tracker, temp, binding, fieldName);
 	}
 	
-	private void subDecode2(JsonIterator iter, Map<String, Object> extra, Object obj, long tracker, Object[] temp, Binding binding, Slice fieldName) throws Exception {
+	private void subDecode2(JsonIterator iter, Map<String, Object> extra, Object obj, long tracker, Object[] temp, Binding binding, Slice fieldName) throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		int intero = CodegenAccess.nextToken(iter);
 		while (intero == ',') {
 			fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
