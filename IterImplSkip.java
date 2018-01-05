@@ -36,58 +36,28 @@ class IterImplSkip {
 	public static final void skip(JsonIterator iter) throws IOException {
 		int[] n = {3, 4};
 		byte c = IterImpl.nextToken(iter);
-		switch (c) {
-		case '"':
+		byte[] skip = "-0123456789".getBytes();
+		
+		for(int i = 0; i<skip.length; i++) {
+			if(c == skip[i]) {
+				IterImpl.skipUntilBreak(iter);
+			}
+		}
+		
+		if(c == '"') {
 			IterImpl.skipString(iter);
-			return;
-		case '-':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '0':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '1':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '2':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '3':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '4':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '5':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '6':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '7':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '8':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '9':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case 'n':
+		} else if(c=='n') {
 			IterImpl.skipFixedBytes(iter, n[0]); // true or null
-			return;
-		case 'f':
+		} else if(c=='f') {
 			IterImpl.skipFixedBytes(iter, n[1]); // false
-			return;
-		case '[':
+		} else if(c=='[') {
 			IterImpl.skipArray(iter);
-			return;
-		case '{':
+		} else if(c=='{') {
 			IterImpl.skipObject(iter);
-			return;
-		default:
+		} else {
 			throw iter.reportError("IterImplSkip", "do not know how to skip: " + c);
 		}
+
 	}
 
 	// adapted from: https://github.com/buger/jsonparser/blob/master/parser.go
