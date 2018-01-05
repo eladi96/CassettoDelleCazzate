@@ -287,7 +287,8 @@ class ReflectionObjectDecoder {
 					return createNewObject(iter, temp);
 				}
 				Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
-				subDecode1(extra, iter, temp, fieldName);
+				Binding binding = allBindings.get(fieldName);
+				subDecode1(extra, iter, temp, fieldName, binding);
 				Object obj = createNewObject(iter, temp);
 				subDecode2(obj, extra, temp);
 				return obj;
@@ -295,9 +296,8 @@ class ReflectionObjectDecoder {
 			return null;
 		}
 		
-		private void subDecode1(Map<String, Object> extra, JsonIterator iter, Object[] temp, Slice fieldName) throws IOException {
+		private void subDecode1(Map<String, Object> extra, JsonIterator iter, Object[] temp, Slice fieldName, Binding binding) throws IOException {
 			long tracker = 0L;
-			Binding binding = allBindings.get(fieldName);
 			if (binding == null) {
 				extra = onUnknownProperty(iter, fieldName, extra);
 			} else {
