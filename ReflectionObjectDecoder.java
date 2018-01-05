@@ -269,6 +269,7 @@ class ReflectionObjectDecoder {
 		}
 
 		private Object decode_(JsonIterator iter) throws Exception {
+			Map<String, Object> extra = null;
 			if (iter.readNull()) {
 				CodegenAccess.resetExistingObject(iter);
 				return null;
@@ -289,10 +290,30 @@ class ReflectionObjectDecoder {
 					}
 					return createNewObject(iter, temp);
 				}
-				Map<String, Object> extra = null;
-				long tracker = 0L;
-				Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
-				Binding binding = allBindings.get(fieldName);
+				subDecode1(extra, iter, temp);
+				Object obj = createNewObject(iter, temp);
+				subDecode2(obj, extra, temp);
+				return obj;
+			}
+			return null;
+		}
+		
+		private void subDecode1(Map<String, Object> extra, JsonIterator iter, Object[] temp) throws IOException {
+			long tracker = 0L;
+			Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
+			Binding binding = allBindings.get(fieldName);
+			if (binding == null) {
+				extra = onUnknownProperty(iter, fieldName, extra);
+			} else {
+				if (binding.asMissingWhenNotPresent) {
+					tracker |= binding.mask;
+				}
+				temp[binding.idx] = decodeBinding(iter, binding);
+			}
+			int intero = CodegenAccess.nextToken(iter);
+			while (intero == ',') {
+				fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
+				binding = allBindings.get(fieldName);
 				if (binding == null) {
 					extra = onUnknownProperty(iter, fieldName, extra);
 				} else {
@@ -301,43 +322,28 @@ class ReflectionObjectDecoder {
 					}
 					temp[binding.idx] = decodeBinding(iter, binding);
 				}
-				byte b = CodegenAccess.nextToken(iter);
-				int intero = b;
-				while (intero == ',') {
-					fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
-					binding = allBindings.get(fieldName);
-					if (binding == null) {
-						extra = onUnknownProperty(iter, fieldName, extra);
-					} else {
-						if (binding.asMissingWhenNotPresent) {
-							tracker |= binding.mask;
-						}
-						temp[binding.idx] = decodeBinding(iter, binding);
-					}
-					b = CodegenAccess.nextToken(iter);
-					intero = b;
-				}
-				if (tracker != expectedTracker) {
-					throw new JsonException(err + collectMissingFields(tracker));
-				}
-				Object obj = createNewObject(iter, temp);
-				setExtra(obj, extra);
-				for (Binding field : desc.fields) {
-					Object val = temp[field.idx];
-					if (!val.equals(NOT_SET) && field.fromNames.length > 0) {
-						field.field.set(obj, val);
-					}
-				}
-				for (Binding setter : desc.setters) {
-					Object val = temp[setter.idx];
-					if (!val.equals(NOT_SET)) {
-						setter.method.invoke(obj, val);
-					}
-				}
-				applyWrappers(temp, obj);
-				return obj;
+				intero = CodegenAccess.nextToken(iter);
 			}
-			return null;
+			if (tracker != expectedTracker) {
+				throw new JsonException(err + collectMissingFields(tracker));
+			}
+		}
+		
+		private void subDecode2(Object obj, Map<String, Object> extra, Object[] temp) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+			setExtra(obj, extra);
+			for (Binding field : desc.fields) {
+				Object val = temp[field.idx];
+				if (!val.equals(NOT_SET) && field.fromNames.length > 0) {
+					field.field.set(obj, val);
+				}
+			}
+			for (Binding setter : desc.setters) {
+				Object val = temp[setter.idx];
+				if (!val.equals(NOT_SET)) {
+					setter.method.invoke(obj, val);
+				}
+			}
+			applyWrappers(temp, obj);
 		}
 	}
 
