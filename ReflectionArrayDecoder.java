@@ -85,17 +85,14 @@ class ReflectionArrayDecoder implements Decoder {
 			Array.set(arr, 1, a2);
 			Array.set(arr, nV[0], a3);
 			break;
-		case 4:
+		default:
 			arr = Array.newInstance(componentType, nV[2]);
 			Array.set(arr, 0, a1);
 			Array.set(arr, 1, a2);
 			Array.set(arr, nV[0], a3);
 			Array.set(arr, nV[1], a4);
 			break;
-		default:
-			break;
 		}
-		
 		return arr;
 	}
 	
