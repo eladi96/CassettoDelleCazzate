@@ -279,7 +279,7 @@ class ReflectionObjectDecoder {
 			}
 			if (iter.tempObjects.get(tempCacheKey) instanceof Object[]) {
 				Object[] temp = (Object[]) iter.tempObjects.get(tempCacheKey);
-				
+				ifSupport(temp, iter);
 				if (!CodegenAccess.readObjectStart(iter)) {
 					if (requiredIdx > 0) {
 						throw new JsonException(err + collectMissingFields(0));
