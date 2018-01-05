@@ -372,17 +372,10 @@ class ReflectionObjectDecoder {
 			}
 			Object obj = createNewObject();
 			if (!CodegenAccess.readObjectStart(iter)) {
-				if (requiredIdx > 0) {
-					if (desc.onMissingProperties == null) {
-						throw new JsonException(err + collectMissingFields(0));
-					} else {
-						setToBinding(obj, desc.onMissingProperties, collectMissingFields(0));
-					}
-				}
+				ifSupport(obj);
 				return obj;
 			}
 			Map<String, Object> extra = null;
-			long tracker = 0L;
 			if (iter.tempObjects == null) {
 				iter.tempObjects = new HashMap<String, Object>();
 			}
@@ -391,13 +384,16 @@ class ReflectionObjectDecoder {
 				return null;
 			} else {
 				Object[] temp = (Object[]) iter.tempObjects.get(tempCacheKey);
-				subDecode1(iter, extra, obj, tracker, temp);
+				subDecode1(iter, extra, obj, temp);
+				setExtra(obj, extra);
+				applyWrappers(temp, obj);
 			}
 			return obj;
 		}
 	}
 	
-	private void subDecode1(JsonIterator iter, Map<String, Object> extra, Object obj, long tracker, Object[] temp) throws Exception {
+	private void subDecode1(JsonIterator iter, Map<String, Object> extra, Object obj, Object[] temp) throws Exception {
+		long tracker = 0L;
 		if (temp == null) {
 			temp = new Object[tempCount];
 			iter.tempObjects.put(tempCacheKey, temp);
@@ -446,10 +442,18 @@ class ReflectionObjectDecoder {
 				setToBinding(obj, desc.onMissingProperties, collectMissingFields(tracker));
 			}
 		}
-		setExtra(obj, extra);
-		applyWrappers(temp, obj);
 	}
 
+	private void ifSupport(Object obj) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		if (requiredIdx > 0) {
+			if (desc.onMissingProperties == null) {
+				throw new JsonException(err + collectMissingFields(0));
+			} else {
+				setToBinding(obj, desc.onMissingProperties, collectMissingFields(0));
+			}
+		}
+	}
+	
 	private void setToBinding(Object obj, Binding binding, Object value)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if (binding.field != null) {
