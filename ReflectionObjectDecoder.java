@@ -92,6 +92,19 @@ class ReflectionObjectDecoder {
 			addBinding(classInfo, param);
 		}
 		this.desc = descr;
+		subInit(descr, classInfo);
+		if (requiredIdx > 63) {
+			throw new JsonException("too many required properties to track");
+		}
+		expectedTracker = Long.MAX_VALUE >> (63 - requiredIdx);
+		if (!descr.ctor.parameters.isEmpty() || !descr.bindingTypeWrappers.isEmpty()) {
+			tempCount = tempIdx;
+			tempCacheKey = "temp@" + clazz.getCanonicalName();
+			ctorArgsCacheKey = "ctor@" + clazz.getCanonicalName();
+		}
+	}
+	
+	private void subInit(final ClassDescriptor descr, final ClassInfo classInfo) {
 		if (descr.ctor.objectFactory == null && descr.ctor.ctor == null && descr.ctor.staticFactory == null) {
 			throw new JsonException("no constructor for: " + descr.clazz);
 		}
@@ -105,15 +118,6 @@ class ReflectionObjectDecoder {
 			for (Binding param : setter.parameters) {
 				addBinding(classInfo, param);
 			}
-		}
-		if (requiredIdx > 63) {
-			throw new JsonException("too many required properties to track");
-		}
-		expectedTracker = Long.MAX_VALUE >> (63 - requiredIdx);
-		if (!descr.ctor.parameters.isEmpty() || !descr.bindingTypeWrappers.isEmpty()) {
-			tempCount = tempIdx;
-			tempCacheKey = "temp@" + clazz.getCanonicalName();
-			ctorArgsCacheKey = "ctor@" + clazz.getCanonicalName();
 		}
 	}
 
