@@ -204,6 +204,11 @@ class ReflectionObjectDecoder {
 				}
 				return obj;
 			}
+			subDecode1(iter, obj);			
+			return obj;
+		}
+		
+		private void subDecode1(JsonIterator iter, Object obj) throws ReflectiveOperationException, IllegalArgumentException, IOException {
 			Map<String, Object> extra = null;
 			long tracker = 0L;
 			Slice fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
@@ -216,8 +221,7 @@ class ReflectionObjectDecoder {
 				}
 				setToBinding(obj, binding, decodeBinding(iter, obj, binding));
 			}
-			byte b = CodegenAccess.nextToken(iter);
-			int intero = b;
+			int intero = CodegenAccess.nextToken(iter);
 			while (intero == ',') {
 				fieldName = CodegenAccess.readObjectFieldAsSlice(iter);
 				binding = allBindings.get(fieldName);
@@ -229,9 +233,12 @@ class ReflectionObjectDecoder {
 					}
 					setToBinding(obj, binding, decodeBinding(iter, obj, binding));
 				}
-				b = CodegenAccess.nextToken(iter);
-				intero = b;
+				intero = CodegenAccess.nextToken(iter);
 			}
+			subDecode2(tracker, obj, extra);
+		}
+		
+		private void subDecode2(long tracker, Object obj, Map<String, Object> extra) throws ReflectiveOperationException, IllegalArgumentException {
 			if (tracker != expectedTracker) {
 				if (desc.onMissingProperties == null) {
 					throw new JsonException(err + collectMissingFields(tracker));
@@ -240,7 +247,6 @@ class ReflectionObjectDecoder {
 				}
 			}
 			setExtra(obj, extra);
-			return obj;
 		}
 	}
 
