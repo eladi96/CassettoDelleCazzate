@@ -41,6 +41,12 @@ class CodegenImplMap {
 		}
 		String mapCacheKey = JsoniterSpi.getMapKeyEncoderCacheKey(keyType);
 		CodegenResult ctx = new CodegenResult();
+
+		ctx = subGenMap1(ctx, keyType, valueType, noIndention, isCollectionValueNullable, mapCacheKey);
+		return subGenMap2(ctx, keyType, valueType, noIndention, isCollectionValueNullable, mapCacheKey);
+	}
+	
+	static CodegenResult subGenMap1(CodegenResult ctx, Type keyType, Type valueType, boolean noIndention, boolean isCollectionValueNullable, String mapCacheKey) {
 		ctx.append(
 				"public static void encode_(java.lang.Object obj, com.jsoniter.output.JsonStream stream) throws java.io.IOException {");
 		ctx.append("if (obj == null) { stream.writeNull(); return; }");
@@ -77,6 +83,11 @@ class CodegenImplMap {
 		} else {
 			CodegenImplNative.genWriteOp(ctx, stringa, valueType, false);
 		}
+		return ctx;
+	}
+	
+	static CodegenResult subGenMap2(CodegenResult ctx, Type keyType, Type valueType, boolean noIndention, boolean isCollectionValueNullable, String mapCacheKey) {
+		
 		ctx.append("while(iter.hasNext()) {");
 		ctx.append("entry = (java.util.Map.Entry)iter.next();");
 		if (noIndention) {

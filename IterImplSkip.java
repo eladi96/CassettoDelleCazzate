@@ -34,62 +34,30 @@ class IterImplSkip {
 	 * @throws IOException
 	 */
 	public static final void skip(JsonIterator iter) throws IOException {
+		int[] n = {3, 4};
 		byte c = IterImpl.nextToken(iter);
-		switch (c) {
-		case '"':
+		byte[] skip = "-0123456789".getBytes();
+		
+		for(int i = 0; i<skip.length; i++) {
+			if(c == skip[i]) {
+				IterImpl.skipUntilBreak(iter);
+			}
+		}
+		
+		if(c == '"') {
 			IterImpl.skipString(iter);
-			return;
-		case '-':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '0':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '1':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '2':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '3':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '4':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '5':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '6':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '7':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '8':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case '9':
-			IterImpl.skipUntilBreak(iter);
-			return;
-		case 't':
-		case 'n':
-			int n1 = 3;
-			IterImpl.skipFixedBytes(iter, n1); // true or null
-			return;
-		case 'f':
-			int n = 4;
-			IterImpl.skipFixedBytes(iter, n); // false
-			return;
-		case '[':
+		} else if(c=='n') {
+			IterImpl.skipFixedBytes(iter, n[0]); // true or null
+		} else if(c=='f') {
+			IterImpl.skipFixedBytes(iter, n[1]); // false
+		} else if(c=='[') {
 			IterImpl.skipArray(iter);
-			return;
-		case '{':
+		} else if(c=='{') {
 			IterImpl.skipObject(iter);
-			return;
-		default:
+		} else {
 			throw iter.reportError("IterImplSkip", "do not know how to skip: " + c);
 		}
+
 	}
 
 	// adapted from: https://github.com/buger/jsonparser/blob/master/parser.go
@@ -98,13 +66,11 @@ class IterImplSkip {
 	final static int findStringEnd(JsonIterator iter) {
 		boolean escaped = false;
 		for (int i = iter.head; i < iter.tail; i++) {
-			byte c = iter.buf[i];
-			if (c == '"') {
+			if (iter.buf[i] == '"') {
 				if (!escaped) {
 					return i + 1;
 				} else {
-					int j = i - 1;
-					for (;;) {
+					for (int j = i - 1;;) {
 						if (j < iter.head || iter.buf[j] != '\\') {
 							// even number of backslashes
 							// either end of buffer, or " found
@@ -119,7 +85,7 @@ class IterImplSkip {
 						j--;
 					}
 				}
-			} else if (c == '\\') {
+			} else if (iter.buf[i] == '\\') {
 				escaped = true;
 			}
 		}
