@@ -37,13 +37,7 @@ class IterImplSkip {
 		int[] n = {3, 4};
 		byte c = IterImpl.nextToken(iter);
 		byte[] skip = "-0123456789".getBytes();
-		
-		for(int i = 0; i<skip.length; i++) {
-			if(c == skip[i]) {
-				IterImpl.skipUntilBreak(iter);
-			}
-		}
-		
+		subSkip(iter, skip, c);
 		if(c == '"') {
 			IterImpl.skipString(iter);
 		} else if(c=='n') {
@@ -58,6 +52,14 @@ class IterImplSkip {
 			throw iter.reportError("IterImplSkip", "do not know how to skip: " + c);
 		}
 
+	}
+	
+	private static void subSkip(JsonIterator iter, byte[] skip, byte c) throws IOException {
+		for(int i = 0; i<skip.length; i++) {
+			if(c == skip[i]) {
+				IterImpl.skipUntilBreak(iter);
+			}
+		}
 	}
 
 	// adapted from: https://github.com/buger/jsonparser/blob/master/parser.go
