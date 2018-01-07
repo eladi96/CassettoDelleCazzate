@@ -491,7 +491,6 @@ class IterImplForStreaming {
 				bcCopy = risultati[i];
 				valid = true;
 			}
-			
 		}
 		if(!valid) {
 			throw iter.reportError("readStringSlowPath", "invalid escape character: " + bcCopy);
