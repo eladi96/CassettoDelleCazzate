@@ -181,12 +181,6 @@ class IterImplForStreaming {
 			}
 		}
 	}
-	
-	final static boolean subSkipString(JsonIterator iter) {
-		boolean escaped = true;
-		
-		return escaped;
-	}
 
 	final static void skipUntilBreak(JsonIterator iter) throws IOException {
 		// true, false, null, number
@@ -670,30 +664,15 @@ class IterImplForStreaming {
 					iter.reusableChars = newBuf;
 				}
 				byte c = iter.buf[i];
-				switch (c) {
-				case '-':
-				case '+':
-				case '.':
-				case 'e':
-				case 'E':
-				case '0':
-				case '1':
-				case '2':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-				case '9':
+				if("-+.eE0123456789".contains(Byte.toString(c))){
 					iter.reusableChars[j++] = Byte.toString(c).charAt(0);
-					break;
-				default:
+				} else {
 					iter.head = i;
 					stringa = new String(iter.reusableChars, 0, j);
 					return stringa;
 				}
 			}
+			
 			if (!IterImpl.loadMore(iter)) {
 				iter.head = iter.tail;
 				stringa = new String(iter.reusableChars, 0, j);
