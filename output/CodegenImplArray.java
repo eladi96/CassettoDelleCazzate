@@ -126,11 +126,19 @@ class CodegenImplArray {
 			isCollectionValueNullable = false;
 		}
 		CodegenResult ctx = new CodegenResult();
-		ctx = subGenList1(ctx, compType, noIndention, isCollectionValueNullable);
+		subGenList1(ctx, noIndention, isCollectionValueNullable);
+		if (isCollectionValueNullable) {
+			ctx.append(stringaIF);
+			CodegenImplNative.genWriteOp(ctx, stringaE, compType, true);
+			ctx.append(parentesi);
+		} else {
+			CodegenImplNative.genWriteOp(ctx, stringaE, compType, false);
+		}
+		ctx.append("for (int i = 1; i < size; i++) {");
 		return subGenList2(ctx, compType, noIndention, isCollectionValueNullable);
 	}
 	
-	private static CodegenResult subGenList1(CodegenResult ctx, Type compType, boolean noIndention, boolean isCollectionValueNullable) {
+	private static void subGenList1(CodegenResult ctx, boolean noIndention, boolean isCollectionValueNullable) {
 		ctx.append(
 				"public static void encode_(java.lang.Object obj, com.jsoniter.output.JsonStream stream) throws java.io.IOException {");
 		ctx.append("java.util.List list = (java.util.List)obj;");
@@ -143,15 +151,7 @@ class CodegenImplArray {
 			ctx.append("stream.writeArrayStart(); stream.writeIndention();");
 		}
 		ctx.append("java.lang.Object e = list.get(0);");
-		if (isCollectionValueNullable) {
-			ctx.append(stringaIF);
-			CodegenImplNative.genWriteOp(ctx, stringaE, compType, true);
-			ctx.append(parentesi);
-		} else {
-			CodegenImplNative.genWriteOp(ctx, stringaE, compType, false);
-		}
-		ctx.append("for (int i = 1; i < size; i++) {");
-		return ctx;
+		
 	}
 	
 	private static CodegenResult subGenList2(CodegenResult ctx, Type compType, boolean noIndention, boolean isCollectionValueNullable) {
@@ -184,11 +184,19 @@ class CodegenImplArray {
 			isCollectionValueNullable = false;
 		}
 		CodegenResult ctx = new CodegenResult();
-		ctx = subGenCollection1(ctx, compType, noIndention, isCollectionValueNullable);
+		subGenCollection1(ctx, noIndention, isCollectionValueNullable);
+		if (isCollectionValueNullable) {
+			ctx.append(stringaIF);
+			CodegenImplNative.genWriteOp(ctx, stringaE, compType, true);
+			ctx.append(parentesi); // if
+		} else {
+			CodegenImplNative.genWriteOp(ctx, stringaE, compType, false);
+		}
+		ctx.append("while (iter.hasNext()) {");
 		return subGenCollection2(ctx, compType, noIndention, isCollectionValueNullable);
 	}
 	
-	private static CodegenResult subGenCollection1(CodegenResult ctx, Type compType, boolean noIndention, boolean isCollectionValueNullable) {
+	private static void subGenCollection1(CodegenResult ctx, boolean noIndention, boolean isCollectionValueNullable) {
 		ctx.append(
 				"public static void encode_(java.lang.Object obj, com.jsoniter.output.JsonStream stream) throws java.io.IOException {");
 		ctx.append("java.util.Iterator iter = ((java.util.Collection)obj).iterator();");
@@ -200,15 +208,7 @@ class CodegenImplArray {
 			ctx.append("stream.writeArrayStart(); stream.writeIndention();");
 		}
 		ctx.append("java.lang.Object e = iter.next();");
-		if (isCollectionValueNullable) {
-			ctx.append(stringaIF);
-			CodegenImplNative.genWriteOp(ctx, stringaE, compType, true);
-			ctx.append(parentesi); // if
-		} else {
-			CodegenImplNative.genWriteOp(ctx, stringaE, compType, false);
-		}
-		ctx.append("while (iter.hasNext()) {");
-		return ctx;
+		
 	}
 	
 	private static CodegenResult subGenCollection2(CodegenResult ctx, Type compType, boolean noIndention, boolean isCollectionValueNullable) {

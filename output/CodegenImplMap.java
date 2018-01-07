@@ -42,14 +42,20 @@ class CodegenImplMap {
 		String mapCacheKey = JsoniterSpi.getMapKeyEncoderCacheKey(keyType);
 		CodegenResult ctx = new CodegenResult();
 		
-		subGenMap1(ctx, noIndention, keyType, mapCacheKey);
-		subGenMap2(ctx, noIndention, keyType, mapCacheKey, isCollectionValueNullable, valueType);
+		subGenMap1(ctx, noIndention, mapCacheKey);
+		if (keyType == String.class) {
+			ctx.append("stream.writeVal((java.lang.String)entry.getKey());");
+		} else {
+			ctx.append(String.format("com.jsoniter.output.CodegenAccess.writeMapKey(\"%s\", entry.getKey(), stream);",
+					mapCacheKey));
+		}
+		String keyTypeString = keyType.toString();
+		subGenMap2(ctx, noIndention, keyTypeString, mapCacheKey, isCollectionValueNullable, valueType);
 		subGenMap3(ctx, noIndention, isCollectionValueNullable, valueType);
-				
 		return ctx;
 	}
 	
-	private static void subGenMap1(CodegenResult ctx, boolean noIndention, Type keyType, String mapCacheKey) {
+	private static void subGenMap1(CodegenResult ctx, boolean noIndention, String mapCacheKey) {
 		ctx.append("public static void encode_(java.lang.Object obj, com.jsoniter.output.JsonStream stream) throws java.io.IOException {");
 		ctx.append("if (obj == null) { stream.writeNull(); return; }");
 		ctx.append("java.util.Map map = (java.util.Map)obj;");
@@ -65,15 +71,10 @@ class CodegenImplMap {
 		} else {
 			ctx.append("stream.writeObjectStart(); stream.writeIndention();");
 		}
-		if (keyType == String.class) {
-			ctx.append("stream.writeVal((java.lang.String)entry.getKey());");
-		} else {
-			ctx.append(String.format("com.jsoniter.output.CodegenAccess.writeMapKey(\"%s\", entry.getKey(), stream);",
-					mapCacheKey));
-		}
+		
 	}
 	
-	private static void subGenMap2(CodegenResult ctx, boolean noIndention, Type keyType, String mapCacheKey, boolean isCollectionValueNullable, Type valueType) {
+	private static void subGenMap2(CodegenResult ctx, boolean noIndention, String keyTypeString, String mapCacheKey, boolean isCollectionValueNullable, Type valueType) {
 		if (noIndention) {
 			ctx.append("stream.write(':');");
 		} else {
@@ -93,7 +94,7 @@ class CodegenImplMap {
 		} else {
 			ctx.append("stream.writeMore();");
 		}
-		if (keyType == String.class) {
+		if (keyTypeString == String.class.toString()) {
 			ctx.append("stream.writeVal((java.lang.String)entry.getKey());");
 		} else {
 			ctx.append(String.format("com.jsoniter.output.CodegenAccess.writeMapKey(\"%s\", entry.getKey(), stream);",
