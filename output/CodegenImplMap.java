@@ -42,7 +42,7 @@ class CodegenImplMap {
 		String mapCacheKey = JsoniterSpi.getMapKeyEncoderCacheKey(keyType);
 		CodegenResult ctx = new CodegenResult();
 		
-		subGenMap1(ctx, noIndention, mapCacheKey);
+		subGenMap1(ctx, noIndention);
 		if (keyType == String.class) {
 			ctx.append("stream.writeVal((java.lang.String)entry.getKey());");
 		} else {
@@ -55,7 +55,7 @@ class CodegenImplMap {
 		return ctx;
 	}
 	
-	private static void subGenMap1(CodegenResult ctx, boolean noIndention, String mapCacheKey) {
+	private static void subGenMap1(CodegenResult ctx, boolean noIndention) {
 		ctx.append("public static void encode_(java.lang.Object obj, com.jsoniter.output.JsonStream stream) throws java.io.IOException {");
 		ctx.append("if (obj == null) { stream.writeNull(); return; }");
 		ctx.append("java.util.Map map = (java.util.Map)obj;");
