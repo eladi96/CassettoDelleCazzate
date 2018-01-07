@@ -420,37 +420,42 @@ class IterImplForStreaming {
 			}
 			if (bc == '\\') {
 				bc = readByte(iter);
-				bc = switchSupport(bc, iter, isExpectingLowSurrogate);
+				int[] valori = {'b','t', 'n', 'f','r','"','\\', '/'};
+				int[] risultati = {'\b','\t','\n','\f','\r','"','\\','/'};
+				boolean valid = false;
+				if(bc=='u') {
+					bc = (IterImplString.translateHex(readByte(iter)) << 12) + (IterImplString.translateHex(readByte(iter)) << 8)
+					    + (IterImplString.translateHex(readByte(iter)) << 4) + IterImplString.translateHex(readByte(iter));
+					boolean b1 = Boolean.logicalAnd(isExpectingLowSurrogate, Character.isHighSurrogate((char) bc));
+					boolean b2 = Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isLowSurrogate((char) bc));
+					if (Boolean.logicalOr(b1, b2)) {
+						throw new JsonException("invalid surrogate");
+					} else if (Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isHighSurrogate((char) bc))) {
+						isExpectingLowSurrogate = true;
+					} else if (Boolean.logicalAnd(isExpectingLowSurrogate, Character.isLowSurrogate((char) bc))) {
+						isExpectingLowSurrogate = false;
+					} else {
+						throw new JsonException("invalid surrogate");
+					}
+					valid = true;
+				}
+				for(int i=0; i<valori.length;i++) {
+					if(bc == valori[i]){
+						bc = risultati[i];
+						valid = true;
+					}
+				}
+				if(!valid) {
+					throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
+				}
 			} else if ((Integer
 					.getInteger(Long
 							.toString(SupportBitwise.bitwise(Long.valueOf(Integer.toString(bc)).longValue(), f, '&')))
 					.intValue()) != 0) {
-				final int u2 = readByte(iter);
-				f = 0xE0;
-				if ((Integer
-						.getInteger(Long.toString(
-								SupportBitwise.bitwise(Long.valueOf(Integer.toString(bc)).longValue(), f, '&')))
-						.intValue()) == 0xC0) {
-					long l1 = 0x1F;
-					long l2 = 0x3F;
-					bc = ((Integer
-							.getInteger(Long.toString(
-									SupportBitwise.bitwise(Long.valueOf(Integer.toString(bc)).longValue(), l1, '&')))
-							.intValue()) << 6)
-							+ (Integer
-									.getInteger(Long.toString(SupportBitwise
-											.bitwise(Long.valueOf(Integer.toString(u2)).longValue(), l2, '&')))
-									.intValue());
-				} else {
-					final int u3 = readByte(iter);
-					f = 0xF0;
-					Map<JsonIterator, Integer> support = new TreeMap<JsonIterator, Integer>();
-					support = iterImplStreamingSupport(iter, f, bc, u2, u3, j);
-					for (JsonIterator je: support.keySet()){
-						iter = je;
-					}
-					bc = support.get(iter);
-				}
+				//
+				Long[] result = ifSupport(iter, f, bc, j);
+				bc = result[0].intValue();
+				f = result[1];
 			}
 			if (iter.reusableChars.length == j) {
 				char[] newBuf = new char[iter.reusableChars.length * 2];
@@ -461,37 +466,36 @@ class IterImplForStreaming {
 		}
 	}
 	
-	private static int switchSupport(int bc, JsonIterator iter, Boolean isExpectingLowSurrogate) throws IOException {
-		
-		int[] valori = {'b','t', 'n', 'f','r','"','\\', '/'};
-		int[] risultati = {'\b','\t','\n','\f','\r','"','\\','/'};
-		boolean valid = false;
-		if(bc=='u') {
-			bc = (IterImplString.translateHex(readByte(iter)) << 12) + (IterImplString.translateHex(readByte(iter)) << 8)
-			    + (IterImplString.translateHex(readByte(iter)) << 4) + IterImplString.translateHex(readByte(iter));
-			boolean b1 = Boolean.logicalAnd(isExpectingLowSurrogate, Character.isHighSurrogate((char) bc));
-			boolean b2 = Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isLowSurrogate((char) bc));
-			if (Boolean.logicalOr(b1, b2)) {
-				throw new JsonException("invalid surrogate");
-			} else if (Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isHighSurrogate((char) bc))) {
-				isExpectingLowSurrogate = true;
-			} else if (Boolean.logicalAnd(isExpectingLowSurrogate, Character.isLowSurrogate((char) bc))) {
-				isExpectingLowSurrogate = false;
-			} else {
-				throw new JsonException("invalid surrogate");
+	private static Long[] ifSupport(JsonIterator iter, long f, int bc, int j) throws IOException {
+		final int u2 = readByte(iter);
+		f = 0xE0;
+		if ((Integer
+				.getInteger(Long.toString(
+						SupportBitwise.bitwise(Long.valueOf(Integer.toString(bc)).longValue(), f, '&')))
+				.intValue()) == 0xC0) {
+			long l1 = 0x1F;
+			long l2 = 0x3F;
+			bc = ((Integer
+					.getInteger(Long.toString(
+							SupportBitwise.bitwise(Long.valueOf(Integer.toString(bc)).longValue(), l1, '&')))
+					.intValue()) << 6)
+					+ (Integer
+							.getInteger(Long.toString(SupportBitwise
+									.bitwise(Long.valueOf(Integer.toString(u2)).longValue(), l2, '&')))
+							.intValue());
+		} else {
+			final int u3 = readByte(iter);
+			f = 0xF0;
+			Map<JsonIterator, Integer> support = new TreeMap<JsonIterator, Integer>();
+			support = iterImplStreamingSupport(iter, f, bc, u2, u3, j);
+			for (JsonIterator je: support.keySet()){
+				iter = je;
 			}
-			valid = true;
+			bc = support.get(iter);
 		}
-		for(int i=0; i<valori.length;i++) {
-			if(bc == valori[i]){
-				bc = risultati[i];
-				valid = true;
-			}
-		}
-		if(!valid) {
-			throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
-		}
-		return bc;
+		long longBc = bc;
+		Long[] result = {longBc, f};
+		return result;
 	}
 	
 	private static Map<JsonIterator, Integer> iterImplStreamingSupport(JsonIterator iter, long f, int bc, int u2, int u3, int j) throws IOException{
