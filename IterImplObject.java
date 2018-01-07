@@ -58,34 +58,12 @@ class IterImplObject {
 		}
 	}
 
-	public static final boolean readObjectCB(JsonIterator iter, JsonIterator.ReadObjectCallback cb, Object attachment)
-			throws IOException {
+	public static final boolean readObjectCB(JsonIterator iter, JsonIterator.ReadObjectCallback cb, Object attachment) throws IOException {
 		byte c = IterImpl.nextToken(iter);
 		if ('{' == c) {
 			c = IterImpl.nextToken(iter);
 			if ('"' == c) {
-				iter.unreadByte();
-				String field = iter.readString();
-				if (IterImpl.nextToken(iter) != ':') {
-					throw iter.reportError(readObject, expect);
-				}
-				if (!cb.handle(iter, field, attachment)) {
-					return false;
-				}
-				byte b = IterImpl.nextToken(iter);
-				int intero = b;
-				while (intero == ',') {
-					field = iter.readString();
-					if (IterImpl.nextToken(iter) != ':') {
-						throw iter.reportError(readObject,expect);
-					}
-					if (!cb.handle(iter, field, attachment)) {
-						return false;
-					}
-					b = IterImpl.nextToken(iter);
-					intero = b;
-				}
-				return true;
+				return subReadObjectCB(iter, cb, attachment);
 			}
 			if ('}' == c) {
 				return true;
@@ -98,5 +76,30 @@ class IterImplObject {
 			return true;
 		}
 		throw iter.reportError("readObjectCB", "expect { or n");
+	}
+	
+	private static final boolean subReadObjectCB(JsonIterator iter, JsonIterator.ReadObjectCallback cb, Object attachment) throws IOException {
+		iter.unreadByte();
+		String field = iter.readString();
+		if (IterImpl.nextToken(iter) != ':') {
+			throw iter.reportError(readObject, expect);
+		}
+		if (!cb.handle(iter, field, attachment)) {
+			return false;
+		}
+		byte b = IterImpl.nextToken(iter);
+		int intero = b;
+		while (intero == ',') {
+			field = iter.readString();
+			if (IterImpl.nextToken(iter) != ':') {
+				throw iter.reportError(readObject,expect);
+			}
+			if (!cb.handle(iter, field, attachment)) {
+				return false;
+			}
+			b = IterImpl.nextToken(iter);
+			intero = b;
+		}
+		return true;
 	}
 }
