@@ -36,8 +36,8 @@ class IterImplSkip {
 	public static final void skip(JsonIterator iter) throws IOException {
 		int[] n = {3, 4};
 		byte c = IterImpl.nextToken(iter);
-		byte[] skip = "-0123456789".getBytes();
-		subSkip(iter, skip, c);
+		byte[] skipArr = "-0123456789".getBytes();
+		subSkip(iter, skipArr, c);
 		if(c == '"') {
 			IterImpl.skipString(iter);
 		} else if(c=='n') {
@@ -54,9 +54,9 @@ class IterImplSkip {
 
 	}
 	
-	private static void subSkip(JsonIterator iter, byte[] skip, byte c) throws IOException {
-		for(int i = 0; i<skip.length; i++) {
-			if(c == skip[i]) {
+	private static void subSkip(JsonIterator iter, byte[] skipArr, byte c) throws IOException {
+		for(int i = 0; i<skipArr.length; i++) {
+			if(c == skipArr[i]) {
 				IterImpl.skipUntilBreak(iter);
 			}
 		}
