@@ -148,7 +148,27 @@ class IterImplForStreaming {
 		for (;;) {
 			int end = IterImplSkip.findStringEnd(iter);
 			if (end == -1) {
-				boolean escaped = subSkipString(iter);	
+				boolean escaped = true;
+				int j = iter.tail - 1;
+				// can not just look the last byte is \
+				// because it could be \\ or \\\
+				for (;;) {
+					// walk backward until head
+					if (Boolean.logicalOr(j < iter.head, iter.buf[j] != '\\')) {
+						// even number of backslashes
+						// either end of buffer, or " found
+						escaped = false;
+						break;
+					}
+					j--;
+					if (Boolean.logicalOr(j < iter.head, iter.buf[j] != '\\')) {
+						// odd number of backslashes
+						// it is \" or \\\"
+						break;
+					}
+					j--;
+
+				}
 				if (!loadMore(iter)) {
 					throw iter.reportError("skipString", "incomplete string");
 				}
@@ -164,26 +184,7 @@ class IterImplForStreaming {
 	
 	final static boolean subSkipString(JsonIterator iter) {
 		boolean escaped = true;
-		int j = iter.tail - 1;
-		// can not just look the last byte is \
-		// because it could be \\ or \\\
-		for (;;) {
-			// walk backward until head
-			if (j < iter.head || iter.buf[j] != '\\') {
-				// even number of backslashes
-				// either end of buffer, or " found
-				escaped = false;
-				break;
-			}
-			j--;
-			if (j < iter.head || iter.buf[j] != '\\') {
-				// odd number of backslashes
-				// it is \" or \\\"
-				break;
-			}
-			j--;
-
-		}
+		
 		return escaped;
 	}
 
@@ -469,24 +470,23 @@ class IterImplForStreaming {
 	private static int switchSupport(int bc, JsonIterator iter, Boolean isExpectingLowSurrogate) throws IOException {
 		
 		int[] valori = {'b','t', 'n', 'f','r','"','\\', '/'};
-		int[] risultati = {'\b','\t', '\n', '\f','\r','"','\\','/'};
+		int[] risultati = {'\b','\t','\n','\f','\r','"','\\','/'};
 		boolean valid = false;
 		if(bc=='u') {
 			bc = (IterImplString.translateHex(readByte(iter)) << 12) + (IterImplString.translateHex(readByte(iter)) << 8)
 			    + (IterImplString.translateHex(readByte(iter)) << 4) + IterImplString.translateHex(readByte(iter));
-			boolean bH = Character.isHighSurrogate((char) bc);
-			boolean bL = Character.isLowSurrogate((char) bc);
-			boolean b1 = Boolean.logicalAnd(isExpectingLowSurrogate, bH);
-			boolean b2 = Boolean.logicalAnd(!isExpectingLowSurrogate, bL);
+			boolean b1 = Boolean.logicalAnd(isExpectingLowSurrogate, Character.isHighSurrogate((char) bc));
+			boolean b2 = Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isLowSurrogate((char) bc));
 			if (Boolean.logicalOr(b1, b2)) {
 				throw new JsonException("invalid surrogate");
-			} else if (Boolean.logicalAnd(!isExpectingLowSurrogate, bH)) {
+			} else if (Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isHighSurrogate((char) bc))) {
 				isExpectingLowSurrogate = true;
-			} else if (Boolean.logicalAnd(isExpectingLowSurrogate, bL)) {
+			} else if (Boolean.logicalAnd(isExpectingLowSurrogate, Character.isLowSurrogate((char) bc))) {
 				isExpectingLowSurrogate = false;
 			} else {
 				throw new JsonException("invalid surrogate");
-			}			
+			}
+			valid = true;
 		}
 		for(int i=0; i<valori.length;i++) {
 			if(bc == valori[i]){
