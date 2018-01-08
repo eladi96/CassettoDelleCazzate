@@ -148,20 +148,20 @@ class IterImplForStreaming {
 		for (;;) {
 			int end = IterImplSkip.findStringEnd(iter);
 			if (end == -1) {
-				boolean escaped = true;
 				int j = iter.tail - 1;
+				boolean escaped = true;
 				// can not just look the last byte is \
 				// because it could be \\ or \\\
 				for (;;) {
 					// walk backward until head
-					if (Boolean.logicalOr(j < iter.head, iter.buf[j] != '\\')) {
+					if (j < iter.head || iter.buf[j] != '\\') {
 						// even number of backslashes
 						// either end of buffer, or " found
 						escaped = false;
 						break;
 					}
 					j--;
-					if (Boolean.logicalOr(j < iter.head, iter.buf[j] != '\\')) {
+					if (j < iter.head || iter.buf[j] != '\\') {
 						// odd number of backslashes
 						// it is \" or \\\"
 						break;
@@ -411,7 +411,7 @@ class IterImplForStreaming {
 	}
 
 	public final static int readStringSlowPath(JsonIterator iter, int j) throws IOException {
-		Boolean isExpectingLowSurrogate = false;
+		boolean isExpectingLowSurrogate = false;
 		long f = 0x80;
 		for (;;) {
 			int bc = readByte(iter);
@@ -420,7 +420,49 @@ class IterImplForStreaming {
 			}
 			if (bc == '\\') {
 				bc = readByte(iter);
-				bc = switchSupport(bc, iter, isExpectingLowSurrogate);
+				switch (bc) {
+				case 'b':
+					bc = '\b';
+					break;
+				case 't':
+					bc = '\t';
+					break;
+				case 'n':
+					bc = '\n';
+					break;
+				case 'f':
+					bc = '\f';
+					break;
+				case 'r':
+					bc = '\r';
+					break;
+				case '"':
+				case '/':
+				case '\\':
+					break;
+				case 'u':
+					bc = (IterImplString.translateHex(readByte(iter)) << 12)
+							+ (IterImplString.translateHex(readByte(iter)) << 8)
+							+ (IterImplString.translateHex(readByte(iter)) << 4)
+							+ IterImplString.translateHex(readByte(iter));
+					boolean bH = Character.isHighSurrogate((char) bc);
+					boolean bL = Character.isLowSurrogate((char) bc);
+					boolean b1 = isExpectingLowSurrogate && bH;
+					boolean b2 = (!isExpectingLowSurrogate && bL);
+					if (b1 || b2) {
+						throw new JsonException("invalid surrogate");
+					} else if (!isExpectingLowSurrogate && bH) {
+						isExpectingLowSurrogate = true;
+					} else if (isExpectingLowSurrogate && bL) {
+						isExpectingLowSurrogate = false;
+					} else {
+						throw new JsonException("invalid surrogate");
+					}
+					break;
+
+				default:
+					throw iter.reportError("readStringSlowPath", "invalid escape character: " + bc);
+				}
 			} else if ((Integer
 					.getInteger(Long
 							.toString(SupportBitwise.bitwise(Long.valueOf(Integer.toString(bc)).longValue(), f, '&')))
@@ -459,43 +501,6 @@ class IterImplForStreaming {
 			}
 			iter.reusableChars[j++] = Integer.toString(bc).charAt(0);
 		}
-	}
-	
-	private static int switchSupport(int bc, JsonIterator iter, Boolean isExpectingLowSurrogate) throws IOException {
-		
-		int bcCopy = bc;
-		boolean booleSupport = isExpectingLowSurrogate;
-		int[] valori = {'b','t', 'n', 'f','r','"','\\', '/'};
-		int[] risultati = {'\b','\t','\n','\f','\r','"','\\','/'};
-		boolean valid = false;
-		if(bcCopy=='u') {
-			bcCopy = (IterImplString.translateHex(readByte(iter)) << 12) + (IterImplString.translateHex(readByte(iter)) << 8)
-			    + (IterImplString.translateHex(readByte(iter)) << 4) + IterImplString.translateHex(readByte(iter));
-			char charBc = (char) bcCopy;
-			boolean b1 = Boolean.logicalAnd(isExpectingLowSurrogate, Character.isHighSurrogate(charBc));
-			boolean b2 = Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isLowSurrogate(charBc));
-			if (Boolean.logicalOr(b1, b2)) {
-				throw new JsonException("invalid surrogate");
-			} else if (Boolean.logicalAnd(!isExpectingLowSurrogate, Character.isHighSurrogate(charBc))) {
-				booleSupport = true;
-			} else if (Boolean.logicalAnd(isExpectingLowSurrogate, Character.isLowSurrogate(charBc))) {
-				booleSupport = false;
-			} else {
-				throw new JsonException("invalid surrogate");
-			}
-			valid = true;
-			isExpectingLowSurrogate = booleSupport;
-		}
-		for(int i=0; i<valori.length;i++) {
-			if(bcCopy == valori[i]){
-				bcCopy = risultati[i];
-				valid = true;
-			}
-		}
-		if(!valid) {
-			throw iter.reportError("readStringSlowPath", "invalid escape character: " + bcCopy);
-		}
-		return bcCopy;
 	}
 	
 	private static Map<JsonIterator, Integer> iterImplStreamingSupport(JsonIterator iter, long f, int bc, int u2, int u3, int j) throws IOException{
@@ -668,15 +673,30 @@ class IterImplForStreaming {
 					iter.reusableChars = newBuf;
 				}
 				byte c = iter.buf[i];
-				if("-+.eE0123456789".contains(Byte.toString(c))){
+				switch (c) {
+				case '-':
+				case '+':
+				case '.':
+				case 'e':
+				case 'E':
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
 					iter.reusableChars[j++] = Byte.toString(c).charAt(0);
-				} else {
+					break;
+				default:
 					iter.head = i;
 					stringa = new String(iter.reusableChars, 0, j);
 					return stringa;
 				}
 			}
-			
 			if (!IterImpl.loadMore(iter)) {
 				iter.head = iter.tail;
 				stringa = new String(iter.reusableChars, 0, j);
